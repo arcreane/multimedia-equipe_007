@@ -33,7 +33,7 @@ int ImageManipulator::setOriginalImage(char *imageName)
     Mat img = imread(imageName);
     if (img.empty())
     {
-        return IMAGE_IS_EMPTY;        
+        return IMAGE_IS_EMPTY;
     }
     this->originalImage = img;
     this->image = img;
@@ -42,7 +42,8 @@ int ImageManipulator::setOriginalImage(char *imageName)
 }
 
 /* Reset function */
-int ImageManipulator::reset() {
+int ImageManipulator::reset()
+{
     image = originalImage;
     imageState.color = IS_COLORED;
     return 0;
@@ -113,11 +114,113 @@ int ImageManipulator::rotateImage(double angle, double scale /*= (1.0)*/, int fl
 {
     Mat rotated;
     // defining center
-    Point2f center(image.cols/2, image.rows/2);
+    Point2f center(image.cols / 2, image.rows / 2);
     // getting the matrix which will define the rotation
     Mat M = getRotationMatrix2D(center, angle, scale);
     // rotating the image
     warpAffine(image, rotated, M, image.size(), flags, borderMode, borderValue);
     image = rotated;
+    return 0;
+}
+
+/* Lighten & Contrast an Image */
+int ImageManipulator::brightenAndContrastImage(double alpha /*= (1.0)*/, double beta /*= (0.0)*/, int rtype /*= (-1)*/)
+{
+    //increase or decrease the brightness or the contrast; alpha -> contrast; beta -> brightness
+    image.convertTo(image, rtype, alpha, beta);
+    return 0;
+}
+
+/* Contrast an Image */
+int ImageManipulator::brightenImage(double beta /*= (0.0)*/, int rtype /*= (-1)*/)
+{
+    //increase or decrease the brightness
+    return brightenAndContrastImage(1, beta, rtype);
+}
+
+/* Lighten an Image */
+int ImageManipulator::lightenImage(double alpha /*= (1.0)*/, int rtype /*= (-1)*/)
+{
+    //increase or decrease the brightness
+    return brightenAndContrastImage(alpha, 0, rtype);
+}
+
+/* Resize an Image */
+int ImageManipulator::resizeImage(Size dsize, double fx /*= (0.0)*/, double fy /*= (0.0)*/, int interpolation /*= (1)*/)
+{
+    Mat dest;
+    // Scaling down or/and up the image
+    resize(image, dest, dsize, fx, fy, interpolation);
+    image = dest;
+    return 0;
+}
+
+/* Crop an Image */
+int ImageManipulator::cropImage(int height, int width)
+{
+    //Cropped image
+    Mat crop = image(Range(0, image.size().height - height), Range(0, image.size().width - width));
+    image = crop;
+    return 0;
+}
+
+/* Dilate an Image */
+int ImageManipulator::dilateImage(int dilation_elem, int dilation_size)
+{
+
+    int dilation_type;
+    if (dilation_elem == 0)
+    {
+        dilation_type = MORPH_RECT;
+    }
+    else if (dilation_elem == 1)
+    {
+        dilation_type = MORPH_CROSS;
+    }
+    else if (dilation_elem == 2)
+    {
+        dilation_type = MORPH_ELLIPSE;
+    }
+
+    Mat element = getStructuringElement(dilation_type,
+                                        Size(2 * dilation_size + 1, 2 * dilation_size + 1),
+                                        Point(dilation_size, dilation_size));
+
+    Mat dilatedImage;
+    /// Apply the dilation operation
+    dilate(image, dilatedImage, element);
+
+    image = dilatedImage;
+    return 0;
+}
+
+/* Erode an Image */
+int ImageManipulator::erodeImage(int erosion_elem, int erosion_size)
+{
+
+    int erosion_type;
+    if (erosion_elem == 0)
+    {
+        erosion_type = MORPH_RECT;
+    }
+    else if (erosion_elem == 1)
+    {
+        erosion_type = MORPH_CROSS;
+    }
+    else if (erosion_elem == 2)
+    {
+        erosion_type = MORPH_ELLIPSE;
+    }
+
+    Mat element = getStructuringElement(erosion_type,
+                                        Size(2 * erosion_size + 1, 2 * erosion_size + 1),
+                                        Point(erosion_size, erosion_size));
+
+    Mat erodedImage;
+
+    /// Apply the erosions operation
+    erode(image, erodedImage, element);
+
+    image = erodedImage;
     return 0;
 }
