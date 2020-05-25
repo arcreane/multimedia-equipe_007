@@ -29,18 +29,19 @@ public:
     QAction *actionLanguage;
     QAction *actionAbout;
     QWidget *centralwidget;
+    QWidget *imageWidget;
     QMenuBar *menubar;
     QMenu *menuFiles;
     QMenu *menuSettings;
     QMenu *menuAbout;
-    QStatusBar *statusbar;
     QToolBar *toolBar;
+    QStatusBar *statusbar;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(800, 600);
+        MainWindow->resize(804, 597);
         actionOpen = new QAction(MainWindow);
         actionOpen->setObjectName(QString::fromUtf8("actionOpen"));
         actionSave = new QAction(MainWindow);
@@ -51,10 +52,14 @@ public:
         actionAbout->setObjectName(QString::fromUtf8("actionAbout"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
+        centralwidget->setEnabled(true);
+        imageWidget = new QWidget(centralwidget);
+        imageWidget->setObjectName(QString::fromUtf8("imageWidget"));
+        imageWidget->setGeometry(QRect(20, 20, 441, 471));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 800, 22));
+        menubar->setGeometry(QRect(0, 0, 804, 22));
         menuFiles = new QMenu(menubar);
         menuFiles->setObjectName(QString::fromUtf8("menuFiles"));
         menuSettings = new QMenu(menubar);
@@ -62,12 +67,12 @@ public:
         menuAbout = new QMenu(menubar);
         menuAbout->setObjectName(QString::fromUtf8("menuAbout"));
         MainWindow->setMenuBar(menubar);
-        statusbar = new QStatusBar(MainWindow);
-        statusbar->setObjectName(QString::fromUtf8("statusbar"));
-        MainWindow->setStatusBar(statusbar);
         toolBar = new QToolBar(MainWindow);
         toolBar->setObjectName(QString::fromUtf8("toolBar"));
         MainWindow->addToolBar(Qt::TopToolBarArea, toolBar);
+        statusbar = new QStatusBar(MainWindow);
+        statusbar->setObjectName(QString::fromUtf8("statusbar"));
+        MainWindow->setStatusBar(statusbar);
 
         menubar->addAction(menuFiles->menuAction());
         menubar->addAction(menuSettings->menuAction());

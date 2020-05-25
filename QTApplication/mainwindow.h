@@ -6,6 +6,9 @@
 #include <QScrollArea>
 #include <QtPrintSupport/QPrinter>
 
+#include <opencv2/opencv.hpp>
+using namespace cv;
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -20,9 +23,11 @@ public:
 
 public slots:
     void open();
+    void showImage(Mat mat);
 
 private:
     Ui::MainWindow *ui;
+    QLabel *imageLabel;
 
 };
 
