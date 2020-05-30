@@ -224,3 +224,45 @@ int ImageManipulator::erodeImage(int erosion_elem, int erosion_size)
     image = erodedImage;
     return 0;
 }
+
+/* Panorama */
+
+/* First we need to take images from a source and instantiate a stitching mode */
+int ImageManipulator::createOwnStitcher() {
+    Stitcher::Mode mode = Stitcher::PANORAMA;
+    vector<Mat> images;
+    string panorama_name = "panorama.jpg";
+
+    /* Read input files - for now we are giving them manually */
+
+    Mat image1 = imread("../assets/img1.png", IMREAD_COLOR);
+    Mat image2 = imread("../assets/img2.png", IMREAD_COLOR);
+
+    if(!image1.data || !image2.data) {
+        cout << "could not open images correctly." << endl;
+        return 0;
+    }
+  
+    images.push_back(image1);
+    images.push_back(image2);
+
+    createOwnPanorama(images, mode, panorama_name);
+
+    return 0;
+}
+
+/* With a list of images as a vector, we can now create a panorama with the specified stitching mode */
+void ImageManipulator::createOwnPanorama(vector<Mat> images, Stitcher::Mode mode, string panorama_name) {
+
+    Mat pano;
+    Ptr<Stitcher> stitcher = Stitcher::create(mode);
+    Stitcher::Status status = stitcher->stitch(images, pano);
+    if (status != Stitcher::OK)
+    {
+        cout << "Can't stitch images, error code = " << int(status) << " - is the common area enough large? " << endl;
+        return;
+    }
+    imwrite("/panorama/" + panorama_name, pano);
+    cout << "stitching completed successfully\n" << panorama_name << " saved!";
+
+}

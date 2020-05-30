@@ -7,7 +7,7 @@ ODIR = objects
 EXE = main
 
 # LIBRARIES
-OPENCV_LIBS = -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_imgcodecs -lopencv_videoio
+OPENCV_LIBS = -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_imgcodecs -lopencv_videoio -lopencv_stitching
 
 # DEPENDENCIES
 DEPENDENCIES += $(wildcard $(IDIR)/*.hpp)
