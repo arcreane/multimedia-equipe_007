@@ -279,3 +279,45 @@ void ImageManipulator::createOwnPanorama(vector<Mat> images, Stitcher::Mode mode
     }   
 }
 
+
+/* Canny edge image detection */
+
+// instantiating a CannyBody struct to set required properties to process a canny edge detection
+CannyBody cannyBody;
+
+// Setting properties related to canny edge detection
+CannyBody ImageManipulator::generateCannyProperties(string &entry_path) {
+
+    cannyBody.lowThreshold = 0;
+    cannyBody.max_lowThreshold = 100;
+    cannyBody.ratio = 3;
+    cannyBody.kernel_size = 3;
+    cannyBody.window_name = "Canny edged image";
+
+    cannyBody.src = imread(entry_path, IMREAD_COLOR);
+
+    if(cannyBody.src.empty()) {
+        cout << "The specified image could not be found." << endl;
+        return cannyBody;
+    }
+
+    cannyBody.dest.create( cannyBody.src.size(), cannyBody.src.type() );
+    cvtColor( cannyBody.src, cannyBody.src_gray, COLOR_BGR2GRAY );
+    namedWindow( cannyBody.window_name, WINDOW_AUTOSIZE );
+
+    createTrackbar( "Min Threshold:", cannyBody.window_name, &cannyBody.lowThreshold, cannyBody.max_lowThreshold, startCannyDetection);
+    startCannyDetection(0, 0);
+    waitKey(0);
+    return cannyBody;
+}
+
+/* Launching Canny on the image with parameters supplied above */
+void startCannyDetection(int, void*)
+{    
+    blur( cannyBody.src_gray, cannyBody.detected_edges, Size(3,3) );
+    Canny( cannyBody.detected_edges, cannyBody.detected_edges, cannyBody.lowThreshold, cannyBody.lowThreshold * cannyBody.ratio, cannyBody.kernel_size );
+    cannyBody.dest = Scalar::all(0);
+    cannyBody.src.copyTo( cannyBody.dest, cannyBody.detected_edges);
+    imshow( cannyBody.window_name, cannyBody.dest );
+}
+

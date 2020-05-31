@@ -25,6 +25,19 @@ struct state
     int color = IS_COLORED;
 };
 
+/* Struct for Canny Edge */
+struct CannyBody {
+    Mat src;
+    Mat src_gray;
+    Mat dest;
+    Mat detected_edges;
+    int lowThreshold;
+    int max_lowThreshold;
+    int ratio;
+    int kernel_size;
+    string window_name;
+};
+
 /* ImageManipulator Class */
 class ImageManipulator
 {
@@ -60,6 +73,10 @@ public:
     int erodeImage(int dilation_elem, int dilation_size);
     int createOwnStitcher(string &entry_path);
     void createOwnPanorama(vector<Mat> images, Stitcher::Mode mode, string panorama_output_path, string panorama_name);
+    CannyBody generateCannyProperties(string &entry_path);
 };
+
+/* Canny edge function */
+void startCannyDetection(int, void*); 
 
 #endif
