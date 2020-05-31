@@ -224,3 +224,58 @@ int ImageManipulator::erodeImage(int erosion_elem, int erosion_size)
     image = erodedImage;
     return 0;
 }
+
+/* Panorama */
+
+/* First we need to take images from a source and instantiate a stitching mode */
+int ImageManipulator::createOwnStitcher(string &entry_path) {
+    Stitcher::Mode mode = Stitcher::PANORAMA;
+    vector<Mat> images;
+    string panorama_name = "panorama.jpg";
+    string panorama_output_path = "../assets/panorama-output/";
+    /* Read input files from a given directory */
+    DIR *dir;
+    struct dirent *entry;
+    if( dir = opendir(entry_path.c_str()) ){
+        while(entry = readdir(dir)){
+                        /* For each found image, we instantiate a Mat object and we add it to the vector */
+                        if( strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0 ) {
+                            Mat image = imread(entry_path + entry->d_name, IMREAD_COLOR);
+                            if(!image.data) {
+                                cout << "could not open image " << entry->d_name << endl;
+                            } else {
+                                images.push_back(image);
+                            }
+                        }  
+                } 
+        closedir(dir);
+    }
+    /* Now that we have images, mode and the output path, we can generate the panorama */
+    createOwnPanorama(images, mode, panorama_output_path, panorama_name);
+
+    return 0;
+}
+
+/* With a list of images as a vector, we can now create a panorama with the specified stitching mode */
+void ImageManipulator::createOwnPanorama(vector<Mat> images, Stitcher::Mode mode, string panorama_output_path, string panorama_name) {
+
+    Mat pano;
+    Ptr<Stitcher> stitcher = Stitcher::create(mode);
+    Stitcher::Status status = stitcher->stitch(images, pano);
+    if (status != Stitcher::OK)
+    {
+        cout << "Can't stitch images, error code = " << int(status) << " - is the common area enough large? " << endl;
+        return;
+    }
+
+    DIR *dir;
+    struct dirent *entry;
+    if( dir = opendir(panorama_output_path.c_str()) ) {
+        imwrite(panorama_output_path + panorama_name, pano);
+        cout << "Stitching completed successfully!" << " Panorama saved in : " << panorama_output_path;
+    } else {
+        cout << "The given output directory does not exist." << endl;
+        cout << panorama_output_path << endl;
+    }   
+}
+
