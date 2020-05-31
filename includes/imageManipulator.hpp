@@ -3,6 +3,8 @@
 
 /* Include internal libraries */
 #include <vector>
+#include <fstream>
+#include <dirent.h>
 
 /* Include external libraries */
 #include <opencv2/opencv.hpp>
@@ -56,8 +58,8 @@ public:
     int cropImage(int height, int width);
     int dilateImage(int dilation_elem, int dilation_size);
     int erodeImage(int dilation_elem, int dilation_size);
-    int createOwnStitcher();
-    void createOwnPanorama(vector<Mat> images, Stitcher::Mode mode, string panorama_name);
+    int createOwnStitcher(string &entry_path);
+    void createOwnPanorama(vector<Mat> images, Stitcher::Mode mode, string panorama_output_path, string panorama_name);
 };
 
 #endif
