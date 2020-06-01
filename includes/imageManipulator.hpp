@@ -1,6 +1,11 @@
 #ifndef __IMAGE_MANIPULATOR__
 #define __IMAGE_MANIPULATOR__
 
+/* Include internal libraries */
+#include <vector>
+#include <fstream>
+#include <dirent.h>
+
 /* Include external libraries */
 #include <opencv2/opencv.hpp>
 
@@ -18,6 +23,19 @@ using namespace cv;
 struct state
 {
     int color = IS_COLORED;
+};
+
+/* Struct for Canny Edge */
+struct CannyBody {
+    Mat src;
+    Mat src_gray;
+    Mat dest;
+    Mat detected_edges;
+    int lowThreshold;
+    int max_lowThreshold;
+    int ratio;
+    int kernel_size;
+    string window_name;
 };
 
 /* ImageManipulator Class */
@@ -53,6 +71,12 @@ public:
     int cropImage(int height, int width);
     int dilateImage(int dilation_elem, int dilation_size);
     int erodeImage(int dilation_elem, int dilation_size);
+    int createOwnStitcher(string &entry_path);
+    void createOwnPanorama(vector<Mat> images, Stitcher::Mode mode, string panorama_output_path, string panorama_name);
+    CannyBody generateCannyProperties(string &entry_path);
 };
+
+/* Canny edge function */
+void startCannyDetection(int, void*); 
 
 #endif
