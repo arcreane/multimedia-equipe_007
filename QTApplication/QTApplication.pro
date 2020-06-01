@@ -28,10 +28,12 @@ LIBS += \
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    imageManipulator.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    imageManipulator.hpp
 
 FORMS += \
     mainwindow.ui
