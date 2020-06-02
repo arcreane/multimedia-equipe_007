@@ -1,14 +1,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "imageManipulator.hpp"
+
 #include <QMainWindow>
 #include <QLabel>
 #include <QScrollArea>
 #include <QtPrintSupport/QPrinter>
-
-#include <imageManipulator.hpp>
-
 #include <opencv2/opencv.hpp>
+
 using namespace cv;
 
 QT_BEGIN_NAMESPACE
@@ -25,11 +25,10 @@ public:
 
 public slots:
     void open();
-    void showImage(Mat mat);
+    void showImage(Mat mat, bool isGrey = false);
     void refreshImage();
     void reset();
-    void imageToGrey();
-    void imageToColor();
+    void changeColor();
     void blurImage(int kernelX, int kernelY, Point anchor = Point(-1, -1), int borderType = 4);
     void blurImage(int kernelXY, Point anchor = Point(-1, -1), int borderType = 4);
     void gaussianBlurImage(int kernelX, int kernelY, double sigmaX = (0.0), double sigmaY = (0.0), int borderType = 4);
@@ -43,10 +42,15 @@ public slots:
     void dilateImage(int dilation_elem, int dilation_size);
     void erodeImage(int dilation_elem, int dilation_size);
 
+private slots:
+    void imageToGrey();
+    void imageToColor();
+
 private:
     Ui::MainWindow *ui;
     QLabel *imageLabel;
     ImageManipulator *imageManipulator;
+    bool imageIsLoaded;
 };
 
 #endif // MAINWINDOW_H

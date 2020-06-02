@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     imageLabel = new QLabel((ui->imageWidget));
     imageLabel->resize(ui->imageWidget->width(),ui->imageWidget->height());
     imageManipulator = new ImageManipulator();
+    imageIsLoaded = false;
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
 }
 
@@ -21,21 +22,28 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::showImage(Mat mat)
+void MainWindow::showImage(Mat mat, bool isGrey /*= false*/)
 {
     //transform matrice into a qimage
-    cvtColor(mat, mat, CV_BGR2RGB);
+    if (isGrey){
+        cvtColor(mat, mat, CV_GRAY2RGB);
+    } else {
+        cvtColor(mat, mat, CV_BGR2RGB);
+    }
     QImage image(mat.data, mat.cols, mat.rows, QImage::Format_RGB888);
     //transform qimage into a pixmap
     QPixmap pixmap = QPixmap::fromImage(image);
     imageLabel->setPixmap(pixmap.scaled(imageLabel->size(), Qt::KeepAspectRatio));
     imageLabel->show();
-
 }
 
 void MainWindow::refreshImage()
 {
-    showImage(imageManipulator->getImage());
+    if (imageManipulator->getState().color == IS_GREY){
+        showImage(imageManipulator->getImage(), true);
+    } else {
+        showImage(imageManipulator->getImage());
+    }
 }
 
 void MainWindow::open()
@@ -47,28 +55,47 @@ void MainWindow::open()
     char *c_fileName = conversion.data();
     // read image and show in gui
     imageManipulator->setOriginalImage(c_fileName);
+    imageIsLoaded = true;
     refreshImage();
 }
 
 /* Reset function */
 void MainWindow::reset()
 {
-    imageManipulator->reset();
-    refreshImage();
+    if (imageIsLoaded) {
+        imageManipulator->reset();
+        refreshImage();
+    }
 }
 
 /* Set image to its grey version */
 void MainWindow::imageToGrey()
 {
-    imageManipulator->imageToGrey();
-    refreshImage();
+    if (imageIsLoaded) {
+        imageManipulator->imageToGrey();
+        ui->actionChangeColor->setText("To color");
+        refreshImage();
+    }
 }
 
 /* Set image to its colored version */
 void MainWindow::imageToColor()
 {
-    imageManipulator->imageToColor();
-    refreshImage();
+    if (imageIsLoaded) {
+        imageManipulator->imageToColor();
+        ui->actionChangeColor->setText("To grey");
+        refreshImage();
+    }
+}
+
+void MainWindow::changeColor(){
+    // if grey change to colored
+    if (imageManipulator->getState().color == IS_GREY){
+        imageToColor();
+    // if colored change to grey
+    } else {
+        imageToGrey();
+    }
 }
 
 /* Set image to a blurred version using classic blur */
