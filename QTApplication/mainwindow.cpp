@@ -22,16 +22,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::showImage(Mat mat, bool isGrey /*= false*/)
+void MainWindow::showImage(Mat mat)
 {
-    //transform matrice into a qimage
-    if (isGrey){
+    if (imageManipulator->getColorType() == GRAY_IMAGE){
         cvtColor(mat, mat, CV_GRAY2RGB);
     } else {
         cvtColor(mat, mat, CV_BGR2RGB);
     }
-    QImage image(mat.data, mat.cols, mat.rows, QImage::Format_RGB888);
-    //transform qimage into a pixmap
+    //transform matrice into a qimage
+    QImage image(mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888);
+    //set label pixmap with qimage
     QPixmap pixmap = QPixmap::fromImage(image);
     imageLabel->setPixmap(pixmap.scaled(imageLabel->size(), Qt::KeepAspectRatio));
     imageLabel->show();
@@ -39,11 +39,7 @@ void MainWindow::showImage(Mat mat, bool isGrey /*= false*/)
 
 void MainWindow::refreshImage()
 {
-    if (imageManipulator->getState().color == IS_GREY){
-        showImage(imageManipulator->getImage(), true);
-    } else {
-        showImage(imageManipulator->getImage());
-    }
+    showImage(imageManipulator->getImage());
 }
 
 void MainWindow::open()
@@ -68,12 +64,29 @@ void MainWindow::reset()
     }
 }
 
+/* Undo function */
+void MainWindow::undo()
+{
+    if (imageIsLoaded) {
+        imageManipulator->undo();
+        refreshImage();
+    }
+}
+
+/* Redo function */
+void MainWindow::redo()
+{
+    if (imageIsLoaded) {
+        imageManipulator->redo();
+        refreshImage();
+    }
+}
+
 /* Set image to its grey version */
 void MainWindow::imageToGrey()
 {
-    if (imageIsLoaded) {
+    if (imageIsLoaded && (imageManipulator->getColorType() != GRAY_IMAGE)) {
         imageManipulator->imageToGrey();
-        ui->actionChangeColor->setText("To color");
         refreshImage();
     }
 }
@@ -83,18 +96,7 @@ void MainWindow::imageToColor()
 {
     if (imageIsLoaded) {
         imageManipulator->imageToColor();
-        ui->actionChangeColor->setText("To grey");
         refreshImage();
-    }
-}
-
-void MainWindow::changeColor(){
-    // if grey change to colored
-    if (imageManipulator->getState().color == IS_GREY){
-        imageToColor();
-    // if colored change to grey
-    } else {
-        imageToGrey();
     }
 }
 
@@ -179,6 +181,7 @@ void MainWindow::dilateImage(int dilation_elem, int dilation_size)
 void MainWindow::erodeImage(int erosion_elem, int erosion_size)
 {
     imageManipulator->erodeImage(erosion_elem, erosion_size);
+    refreshImage();
 }
 
 

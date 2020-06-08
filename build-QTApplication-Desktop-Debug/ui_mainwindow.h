@@ -30,6 +30,8 @@ public:
     QAction *actionAbout;
     QAction *actionChangeColor;
     QAction *actionReset;
+    QAction *actionUndo;
+    QAction *actionRedo;
     QWidget *centralwidget;
     QWidget *imageWidget;
     QMenuBar *menubar;
@@ -57,6 +59,10 @@ public:
         actionChangeColor->setObjectName(QString::fromUtf8("actionChangeColor"));
         actionReset = new QAction(MainWindow);
         actionReset->setObjectName(QString::fromUtf8("actionReset"));
+        actionUndo = new QAction(MainWindow);
+        actionUndo->setObjectName(QString::fromUtf8("actionUndo"));
+        actionRedo = new QAction(MainWindow);
+        actionRedo->setObjectName(QString::fromUtf8("actionRedo"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         centralwidget->setEnabled(true);
@@ -94,14 +100,20 @@ public:
         menuAbout->addAction(actionAbout);
         menuImages->addAction(actionChangeColor);
         menuImages->addAction(actionReset);
+        menuImages->addAction(actionUndo);
+        menuImages->addAction(actionRedo);
         toolBar->addAction(actionOpen);
         toolBar->addAction(actionSave);
         toolBar->addAction(actionReset);
+        toolBar->addAction(actionUndo);
+        toolBar->addAction(actionRedo);
 
         retranslateUi(MainWindow);
         QObject::connect(actionOpen, SIGNAL(triggered()), MainWindow, SLOT(open()));
-        QObject::connect(actionChangeColor, SIGNAL(triggered()), MainWindow, SLOT(changeColor()));
+        QObject::connect(actionChangeColor, SIGNAL(triggered()), MainWindow, SLOT(imageToGrey()));
         QObject::connect(actionReset, SIGNAL(triggered()), MainWindow, SLOT(reset()));
+        QObject::connect(actionUndo, SIGNAL(triggered()), MainWindow, SLOT(undo()));
+        QObject::connect(actionRedo, SIGNAL(triggered()), MainWindow, SLOT(redo()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -115,6 +127,8 @@ public:
         actionAbout->setText(QCoreApplication::translate("MainWindow", "About", nullptr));
         actionChangeColor->setText(QCoreApplication::translate("MainWindow", "To grey", nullptr));
         actionReset->setText(QCoreApplication::translate("MainWindow", "Reset", nullptr));
+        actionUndo->setText(QCoreApplication::translate("MainWindow", "Undo", nullptr));
+        actionRedo->setText(QCoreApplication::translate("MainWindow", "Redo", nullptr));
         menuFiles->setTitle(QCoreApplication::translate("MainWindow", "Files", nullptr));
         menuSettings->setTitle(QCoreApplication::translate("MainWindow", "Settings", nullptr));
         menuAbout->setTitle(QCoreApplication::translate("MainWindow", "About", nullptr));

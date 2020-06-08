@@ -25,10 +25,13 @@ public:
 
 public slots:
     void open();
-    void showImage(Mat mat, bool isGrey = false);
+    void showImage(Mat mat);
     void refreshImage();
     void reset();
-    void changeColor();
+    void undo();
+    void redo();
+    void imageToGrey();
+    void imageToColor();
     void blurImage(int kernelX, int kernelY, Point anchor = Point(-1, -1), int borderType = 4);
     void blurImage(int kernelXY, Point anchor = Point(-1, -1), int borderType = 4);
     void gaussianBlurImage(int kernelX, int kernelY, double sigmaX = (0.0), double sigmaY = (0.0), int borderType = 4);
@@ -41,10 +44,6 @@ public slots:
     void cropImage(int height, int width);
     void dilateImage(int dilation_elem, int dilation_size);
     void erodeImage(int dilation_elem, int dilation_size);
-
-private slots:
-    void imageToGrey();
-    void imageToColor();
 
 private:
     Ui::MainWindow *ui;

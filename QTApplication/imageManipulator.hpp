@@ -10,20 +10,16 @@
 #include <opencv2/opencv.hpp>
 
 /* Macros */
-#define IS_COLORED 1
-#define IS_GREY 2
 
+// thresholds
+#define MAX_REMEMBERED_CHANGES 20
+
+// errors codes
 #define IMAGE_IS_EMPTY -1
 
 /* Namespaces */
 using namespace std;
 using namespace cv;
-
-/* State structore for image */
-struct state
-{
-    int color = IS_COLORED;
-};
 
 /* Struct for Canny Edge */
 struct CannyBody {
@@ -38,13 +34,24 @@ struct CannyBody {
     string window_name;
 };
 
+enum ImageColorType {
+    GRAY_IMAGE,
+    BGR_IMAGE
+};
+
+struct ImageState {
+    Mat image;
+    ImageColorType colorType;
+};
+
 /* ImageManipulator Class */
 class ImageManipulator
 {
 private:
-    Mat image;
+    ImageState currentImageState;
     Mat originalImage;
-    state imageState;
+    int currentChangesIndex;
+    vector<ImageState> lastChanges;
 
 public:
     // Constructors
@@ -53,11 +60,14 @@ public:
     // Getters
     Mat getOriginalImage();
     Mat getImage();
-    state getState();
+    ImageColorType getColorType();
     // Setters
+    int setImage(Mat newImage);
     int setOriginalImage(char *imageName);
     // Methods
     int reset();
+    int undo();
+    int redo();
     int imageToGrey();
     int imageToColor();
     int blurImage(int kernelX, int kernelY, Point anchor = Point(-1, -1), int borderType = 4);

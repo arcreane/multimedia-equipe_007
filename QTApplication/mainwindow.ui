@@ -63,6 +63,8 @@
     </property>
     <addaction name="actionChangeColor"/>
     <addaction name="actionReset"/>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
    </widget>
    <addaction name="menuFiles"/>
    <addaction name="menuSettings"/>
@@ -82,6 +84,8 @@
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
    <addaction name="actionReset"/>
+   <addaction name="actionUndo"/>
+   <addaction name="actionRedo"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
@@ -114,6 +118,16 @@
     <string>Reset</string>
    </property>
   </action>
+  <action name="actionUndo">
+   <property name="text">
+    <string>Undo</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="text">
+    <string>Redo</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>
@@ -137,7 +151,7 @@
    <sender>actionChangeColor</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
-   <slot>changeColor()</slot>
+   <slot>imageToGrey()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -165,10 +179,44 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionUndo</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>undo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>401</x>
+     <y>298</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRedo</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>redo()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>401</x>
+     <y>298</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>401</x>
+     <y>298</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>open()</slot>
-  <slot>changeColor()</slot>
   <slot>reset()</slot>
+  <slot>imageToGrey()</slot>
+  <slot>undo()</slot>
+  <slot>redo()</slot>
  </slots>
 </ui>

@@ -6,32 +6,44 @@
  * ***********************************/
 
 /* Constructors */
-ImageManipulator::ImageManipulator(){
-
+ImageManipulator::ImageManipulator()
+{
+    this->currentChangesIndex = 0;
 }
 
 ImageManipulator::ImageManipulator(char *imageName)
 {
     this->setOriginalImage(imageName);
+    this->currentChangesIndex = 0;
 }
 
 /* Getters */
 Mat ImageManipulator::getOriginalImage()
 {
-    return image;
+    return originalImage;
 }
 
 Mat ImageManipulator::getImage()
 {
-    return image;
+    return currentImageState.image;
 }
 
-state ImageManipulator::getState()
+ImageColorType ImageManipulator::getColorType()
 {
-    return imageState;
+    return currentImageState.colorType;
 }
 
 /* Setters */
+int ImageManipulator::setImage(Mat newImage)
+{
+    currentImageState.image = newImage;
+    lastChanges.insert(lastChanges.begin() + currentChangesIndex, currentImageState);
+    if (lastChanges.size() > MAX_REMEMBERED_CHANGES){
+        lastChanges.erase(lastChanges.begin());
+    }
+    return 0;
+}
+
 int ImageManipulator::setOriginalImage(char *imageName)
 {
     Mat img = imread(imageName);
@@ -39,45 +51,63 @@ int ImageManipulator::setOriginalImage(char *imageName)
     {
         return IMAGE_IS_EMPTY;
     }
-    this->originalImage = img;
-    this->image = img;
-    this->imageState.color = IS_COLORED;
+    originalImage = img;
+    setImage(img);
+    currentImageState.colorType = BGR_IMAGE;
     return 0;
 }
 
 /* Reset function */
 int ImageManipulator::reset()
 {
-    image = originalImage;
-    imageState.color = IS_COLORED;
+    setImage(originalImage);
+    currentImageState.colorType = BGR_IMAGE;
+    return 0;
+}
+
+/* Undo function */
+int ImageManipulator::undo()
+{
+    if(currentChangesIndex < 0){
+        currentChangesIndex--;
+        ImageState undo = lastChanges.at(currentChangesIndex);
+        currentImageState.image = undo.image;
+        currentImageState.colorType = undo.colorType;
+    }
+    return 0;
+}
+
+/* Redo function */
+int ImageManipulator::redo()
+{
+    if(currentChangesIndex > MAX_REMEMBERED_CHANGES - 1){
+        currentChangesIndex++;
+        ImageState redo = lastChanges.at(currentChangesIndex);
+        currentImageState.image = redo.image;
+        currentImageState.colorType = redo.colorType;
+    }
     return 0;
 }
 
 /* Set image to its grey version */
 int ImageManipulator::imageToGrey()
 {
-    if (imageState.color == IS_COLORED)
-    {
-        Mat greyImage;
-        // get grey image from colored image
-        cvtColor(image, greyImage, COLOR_BGR2GRAY);
-        image = greyImage;
-        imageState.color = IS_GREY;
-    }
+    Mat greyImage;
+    // get grey image from colored image
+    cvtColor(currentImageState.image, greyImage, COLOR_BGR2GRAY);
+    currentImageState.colorType = GRAY_IMAGE;
+    setImage(greyImage);
     return 0;
 }
 
 /* Set image to its colored version */
 int ImageManipulator::imageToColor()
 {
-    if (imageState.color == IS_GREY)
-    {
-        Mat coloredImage;
-        // get colored image from grey image
-        cvtColor(image, coloredImage, COLOR_GRAY2BGR);
-        image = coloredImage;
-        imageState.color = IS_COLORED;
-    }
+    Mat coloredImage;
+    // get colored image from grey image
+    cvtColor(currentImageState.image, coloredImage, COLOR_GRAY2BGR);
+    currentImageState.colorType = BGR_IMAGE;
+    setImage(coloredImage);
     return 0;
 }
 
@@ -86,8 +116,8 @@ int ImageManipulator::blurImage(int kernelX, int kernelY, Point anchor /*= Point
 {
     Mat blurredImage;
     // blur image
-    blur(image, blurredImage, Size(kernelX, kernelY), anchor, borderType);
-    image = blurredImage;
+    blur(currentImageState.image, blurredImage, Size(kernelX, kernelY), anchor, borderType);
+    setImage(blurredImage);
     return 0;
 }
 
@@ -102,8 +132,8 @@ int ImageManipulator::gaussianBlurImage(int kernelX, int kernelY, double sigmaX 
 {
     Mat gaussianBlurredImage;
     // gaussian blur image
-    GaussianBlur(image, gaussianBlurredImage, Size(kernelX, kernelY), sigmaX, sigmaY, borderType);
-    image = gaussianBlurredImage;
+    GaussianBlur(currentImageState.image, gaussianBlurredImage, Size(kernelX, kernelY), sigmaX, sigmaY, borderType);
+    setImage(gaussianBlurredImage);
     return 0;
 }
 
@@ -118,12 +148,12 @@ int ImageManipulator::rotateImage(double angle, double scale /*= (1.0)*/, int fl
 {
     Mat rotated;
     // defining center
-    Point2f center(image.cols / 2, image.rows / 2);
+    Point2f center(currentImageState.image.cols / 2, currentImageState.image.rows / 2);
     // getting the matrix which will define the rotation
     Mat M = getRotationMatrix2D(center, angle, scale);
     // rotating the image
-    warpAffine(image, rotated, M, image.size(), flags, borderMode, borderValue);
-    image = rotated;
+    warpAffine(currentImageState.image, rotated, M, currentImageState.image.size(), flags, borderMode, borderValue);
+    setImage(rotated);
     return 0;
 }
 
@@ -131,7 +161,7 @@ int ImageManipulator::rotateImage(double angle, double scale /*= (1.0)*/, int fl
 int ImageManipulator::brightenAndContrastImage(double alpha /*= (1.0)*/, double beta /*= (0.0)*/, int rtype /*= (-1)*/)
 {
     //increase or decrease the brightness or the contrast; alpha -> contrast; beta -> brightness
-    image.convertTo(image, rtype, alpha, beta);
+    currentImageState.image.convertTo(currentImageState.image, rtype, alpha, beta);
     return 0;
 }
 
@@ -154,8 +184,8 @@ int ImageManipulator::resizeImage(Size dsize, double fx /*= (0.0)*/, double fy /
 {
     Mat dest;
     // Scaling down or/and up the image
-    resize(image, dest, dsize, fx, fy, interpolation);
-    image = dest;
+    resize(currentImageState.image, dest, dsize, fx, fy, interpolation);
+    setImage(dest);
     return 0;
 }
 
@@ -163,8 +193,7 @@ int ImageManipulator::resizeImage(Size dsize, double fx /*= (0.0)*/, double fy /
 int ImageManipulator::cropImage(int height, int width)
 {
     //Cropped image
-    Mat crop = image(Range(0, image.size().height - height), Range(0, image.size().width - width));
-    image = crop;
+    setImage(currentImageState.image(Range(0, currentImageState.image.size().height - height), Range(0, currentImageState.image.size().width - width)));
     return 0;
 }
 
@@ -191,15 +220,14 @@ int ImageManipulator::dilateImage(int dilation_elem, int dilation_size)
     Mat element = getStructuringElement(dilation_type, size, point);
     // create dilatated image and apply the dilation operation
     Mat dilatedImage;
-    dilate(image, dilatedImage, element);
-    image = dilatedImage;
+    dilate(currentImageState.image, dilatedImage, element);
+    setImage(dilatedImage);
     return 0;
 }
 
 /* Erode an Image */
 int ImageManipulator::erodeImage(int erosion_elem, int erosion_size)
 {
-
     int erosion_type;
     if (erosion_elem == 0)
     {
@@ -213,17 +241,13 @@ int ImageManipulator::erodeImage(int erosion_elem, int erosion_size)
     {
         erosion_type = MORPH_ELLIPSE;
     }
-
     Mat element = getStructuringElement(erosion_type,
                                         Size(2 * erosion_size + 1, 2 * erosion_size + 1),
                                         Point(erosion_size, erosion_size));
-
     Mat erodedImage;
-
-    /// Apply the erosions operation
-    erode(image, erodedImage, element);
-
-    image = erodedImage;
+    // Apply the erosions operation
+    erode(currentImageState.image, erodedImage, element);
+    setImage(erodedImage);
     return 0;
 }
 
