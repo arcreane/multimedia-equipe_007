@@ -84,7 +84,7 @@ public:
     int erodeImage(int dilation_elem, int dilation_size);
     int createOwnStitcher(string &entry_path);
     void createOwnPanorama(vector<Mat> images, Stitcher::Mode mode, string panorama_output_path, string panorama_name);
-    CannyBody generateCannyProperties(string &entry_path);
+    CannyBody generateCannyProperties();
 };
 
 /* Canny edge function */

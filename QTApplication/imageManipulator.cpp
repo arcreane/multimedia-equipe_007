@@ -258,7 +258,7 @@ int ImageManipulator::createOwnStitcher(string &entry_path) {
     Stitcher::Mode mode = Stitcher::PANORAMA;
     vector<Mat> images;
     string panorama_name = "panorama.jpg";
-    string panorama_output_path = "../assets/panorama-output/";
+    string panorama_output_path = "/../assets/panorama-output/";
     /* Read input files from a given directory */
     DIR *dir;
     struct dirent *entry;
@@ -266,7 +266,7 @@ int ImageManipulator::createOwnStitcher(string &entry_path) {
         while(entry = readdir(dir)){
                         /* For each found image, we instantiate a Mat object and we add it to the vector */
                         if( strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0 ) {
-                            Mat image = imread(entry_path + entry->d_name, IMREAD_COLOR);
+                            Mat image = imread(entry_path + "/" + entry->d_name, IMREAD_COLOR);
                             if(!image.data) {
                                 cout << "could not open image " << entry->d_name << endl;
                             } else {
@@ -296,6 +296,17 @@ void ImageManipulator::createOwnPanorama(vector<Mat> images, Stitcher::Mode mode
 
     DIR *dir;
     struct dirent *entry;
+
+    /* If there is no current image being edited, we display the result as an image.
+       Else, we open a new window containing the result because we don't want to replace current content due to the fact that panorama
+       is not an editing functionality.
+    */
+    if(getImage().empty()) {
+        setImage(pano);
+    } else {
+        imshow("Panorama result", pano);
+    }
+
     if( dir = opendir(panorama_output_path.c_str()) ) {
         imwrite(panorama_output_path + panorama_name, pano);
         cout << "Stitching completed successfully!" << " Panorama saved in : " << panorama_output_path;
@@ -311,7 +322,7 @@ void ImageManipulator::createOwnPanorama(vector<Mat> images, Stitcher::Mode mode
 CannyBody cannyBody;
 
 // Setting properties related to canny edge detection
-CannyBody ImageManipulator::generateCannyProperties(string &entry_path) {
+CannyBody ImageManipulator::generateCannyProperties() {
 
     cannyBody.lowThreshold = 0;
     cannyBody.max_lowThreshold = 100;
@@ -319,7 +330,7 @@ CannyBody ImageManipulator::generateCannyProperties(string &entry_path) {
     cannyBody.kernel_size = 3;
     cannyBody.window_name = "Canny edged image";
 
-    cannyBody.src = imread(entry_path, IMREAD_COLOR);
+    cannyBody.src = currentImageState.image;
 
     if(cannyBody.src.empty()) {
         cout << "The specified image could not be found." << endl;

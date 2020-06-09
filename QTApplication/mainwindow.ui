@@ -62,6 +62,7 @@
      <string>Images</string>
     </property>
     <addaction name="actionChangeColor"/>
+    <addaction name="actionDetectEdges"/>
     <addaction name="actionReset"/>
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
@@ -86,6 +87,8 @@
    <addaction name="actionReset"/>
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
+   <addaction name="separator"/>
+   <addaction name="actionPanorama"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
@@ -126,6 +129,19 @@
   <action name="actionRedo">
    <property name="text">
     <string>Redo</string>
+   </property>
+  </action>
+  <action name="actionDetectEdges">
+   <property name="text">
+    <string>Edge Detection</string>
+   </property>
+  </action>
+  <action name="actionPanorama">
+   <property name="text">
+    <string>Panorama</string>
+   </property>
+   <property name="toolTip">
+    <string>Open the assets folder</string>
    </property>
   </action>
  </widget>
@@ -202,8 +218,40 @@
    <slot>redo()</slot>
    <hints>
     <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
      <x>401</x>
      <y>298</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionDetectEdges</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>detectEdges()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>401</x>
+     <y>298</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionPanorama</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>createPanorama()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>401</x>
@@ -218,5 +266,7 @@
   <slot>imageToGrey()</slot>
   <slot>undo()</slot>
   <slot>redo()</slot>
+  <slot>detectEdges()</slot>
+  <slot>createPanorama()</slot>
  </slots>
 </ui>

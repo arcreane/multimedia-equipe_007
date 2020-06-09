@@ -184,5 +184,39 @@ void MainWindow::erodeImage(int erosion_elem, int erosion_size)
     refreshImage();
 }
 
+/* Detect Edges */
+void MainWindow::detectEdges()
+{
+    if (imageIsLoaded) {
+        imageManipulator->generateCannyProperties();
+        refreshImage();
+    }
+}
+
+/* Create Panorama */
+void MainWindow::createPanorama()
+{
+    /* Enabling file explorer features for directories only. */
+    QFileDialog dialog;
+    dialog.setFileMode(QFileDialog::DirectoryOnly);
+    dialog.setOption(QFileDialog::ShowDirsOnly, false);
+    dialog.exec();
+
+    // get selected folder
+    QDir selected_folder = dialog.directory();
+    QString selected_folder_path = selected_folder.absolutePath();
+    string pathAsString = selected_folder_path.toStdString();
+
+    /* Starting by stitching */
+    imageManipulator->createOwnStitcher(pathAsString);
+
+    /* If an image isnt loaded, it means that our above function will replace the current image with
+     * the panorama result so we have to force refresh.
+     */
+    if (!imageIsLoaded) {
+        refreshImage();
+    }
+}
+
 
 

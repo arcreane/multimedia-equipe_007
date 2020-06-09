@@ -31,6 +31,8 @@ public slots:
     void undo();
     void redo();
     void imageToGrey();
+    void detectEdges();
+    void createPanorama();
     void imageToColor();
     void blurImage(int kernelX, int kernelY, Point anchor = Point(-1, -1), int borderType = 4);
     void blurImage(int kernelXY, Point anchor = Point(-1, -1), int borderType = 4);
