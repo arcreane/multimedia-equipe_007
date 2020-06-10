@@ -190,7 +190,7 @@ int ImageManipulator::cropImage(int height, int width)
 }
 
 /* Dilate an Image */
-int ImageManipulator::dilateImage(int dilation_elem, int dilation_size)
+Mat ImageManipulator::dilateImage(int dilation_elem, int dilation_size)
 {
     int dilation_type;
     switch(dilation_elem){
@@ -213,12 +213,11 @@ int ImageManipulator::dilateImage(int dilation_elem, int dilation_size)
     // create dilatated image and apply the dilation operation
     Mat dilatedImage;
     dilate(currentImageState.image, dilatedImage, element);
-    setImage(dilatedImage);
-    return 0;
+    return dilatedImage;
 }
 
 /* Erode an Image */
-int ImageManipulator::erodeImage(int erosion_elem, int erosion_size)
+Mat ImageManipulator::erodeImage(int erosion_elem, int erosion_size)
 {
     int erosion_type;
     if (erosion_elem == 0)
@@ -239,8 +238,7 @@ int ImageManipulator::erodeImage(int erosion_elem, int erosion_size)
     Mat erodedImage;
     // Apply the erosions operation
     erode(currentImageState.image, erodedImage, element);
-    setImage(erodedImage);
-    return 0;
+    return erodedImage;
 }
 
 /* Panorama */

@@ -157,7 +157,7 @@ public:
         rotationWidget->setGeometry(QRect(0, 350, 201, 91));
         buttonRotateM90 = new QPushButton(rotationWidget);
         buttonRotateM90->setObjectName(QString::fromUtf8("buttonRotateM90"));
-        buttonRotateM90->setGeometry(QRect(100, 10, 89, 25));
+        buttonRotateM90->setGeometry(QRect(110, 10, 89, 25));
         buttonRotateP90 = new QPushButton(rotationWidget);
         buttonRotateP90->setObjectName(QString::fromUtf8("buttonRotateP90"));
         buttonRotateP90->setGeometry(QRect(0, 10, 89, 25));
@@ -309,7 +309,7 @@ public:
         actionBlur->setText(QCoreApplication::translate("MainWindow", "Blur", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "Contrast", nullptr));
         label_4->setText(QCoreApplication::translate("MainWindow", "Brightness", nullptr));
-        label->setText(QCoreApplication::translate("MainWindow", "kernel size for blurring", nullptr));
+        label->setText(QCoreApplication::translate("MainWindow", "Kernel size for blurring", nullptr));
         gaussianBox->setText(QCoreApplication::translate("MainWindow", "Gaussian", nullptr));
         buttonRotateM90->setText(QCoreApplication::translate("MainWindow", "Rotate - 90\302\260", nullptr));
         buttonRotateP90->setText(QCoreApplication::translate("MainWindow", "Rotate + 90\302\260", nullptr));

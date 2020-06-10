@@ -117,7 +117,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>kernel size for blurring</string>
+       <string>Kernel size for blurring</string>
       </property>
      </widget>
      <widget class="QSlider" name="slider_blur">
@@ -159,7 +159,7 @@
      <widget class="QPushButton" name="buttonRotateM90">
       <property name="geometry">
        <rect>
-        <x>100</x>
+        <x>110</x>
         <y>10</y>
         <width>89</width>
         <height>25</height>
