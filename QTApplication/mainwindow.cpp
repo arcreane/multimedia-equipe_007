@@ -1,9 +1,10 @@
-﻿#include "mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "qscreen.h"
 #include "qfiledialog.h"
 #include "qgridlayout.h"
 #include "qpushbutton.h"
+#include "qslider.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,6 +16,15 @@ MainWindow::MainWindow(QWidget *parent)
     imageManipulator = new ImageManipulator();
     imageIsLoaded = false;
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
+    ui->slider->setRange(0, 10);
+    ui->slider->setValue(0);
+    ui->slider_contrast->setRange(0, 100);
+    ui->slider_contrast->setValue(0);
+    ui->slider_brightness->setRange(1, 3);
+    ui->slider_brightness->setValue(1);
+    ui->containerWidget->setVisible(false);
+    instantiateFunctions();
+
 }
 
 MainWindow::~MainWindow()
@@ -24,17 +34,20 @@ MainWindow::~MainWindow()
 
 void MainWindow::showImage(Mat mat)
 {
-    if (imageManipulator->getColorType() == GRAY_IMAGE){
-        cvtColor(mat, mat, CV_GRAY2RGB);
-    } else {
-        cvtColor(mat, mat, CV_BGR2RGB);
-    }
+   if (imageIsLoaded) {
+   if (imageManipulator->getColorType() == GRAY_IMAGE){
+       cvtColor(mat, mat, CV_GRAY2RGB);
+   }
+
     //transform matrice into a qimage
-    QImage image(mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888);
+    QImage image= QImage((uchar*) mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888).rgbSwapped();
     //set label pixmap with qimage
     QPixmap pixmap = QPixmap::fromImage(image);
     imageLabel->setPixmap(pixmap.scaled(imageLabel->size(), Qt::KeepAspectRatio));
     imageLabel->show();
+    ui->containerWidget->setVisible(true);
+
+   }
 }
 
 void MainWindow::refreshImage()
@@ -100,9 +113,25 @@ void MainWindow::imageToColor()
     }
 }
 
+void MainWindow::instantiateFunctions(){
+    // gaussian blur
+    if (ui->gaussianBox->isChecked()){
+         ui->slider->setValue(0);
+         connect(ui->slider, SIGNAL(valueChanged(int)), this, SLOT(gaussianBlurImage(int)));
+    }
+    else {
+    ui->slider->setValue(0);
+    connect(ui->slider, SIGNAL(valueChanged(int)), this, SLOT(blurImage(int)));
+    }
+    connect(ui->slider_contrast,SIGNAL(valueChanged(int)), this, SLOT(contrastImage2(int)));
+    connect(ui->slider_brightness,SIGNAL(valueChanged(int)), this, SLOT(lightenImage2(int)));
+    refreshImage();
+}
+
 /* Set image to a blurred version using classic blur */
 void MainWindow::blurImage(int kernelX, int kernelY, Point anchor /*= Point(-1,-1)*/, int borderType /*= 4*/)
 {
+
     imageManipulator->blurImage(kernelX, kernelY, anchor, borderType);
     refreshImage();
 }
@@ -117,15 +146,19 @@ void MainWindow::blurImage(int kernelXY, Point anchor /*= Point(-1,-1)*/, int bo
 /* Set image to a blurred version using gaussian blur */
 void MainWindow::gaussianBlurImage(int kernelX, int kernelY, double sigmaX /*= (0.0)*/, double sigmaY /*= (0.0)*/, int borderType /*= 4*/)
 {
+    if (imageIsLoaded) {
     imageManipulator->gaussianBlurImage(kernelX, kernelY, sigmaX, sigmaY, borderType);
     refreshImage();
+    }
 }
 
 /* Set image to a blurred version using gaussian blur */
 void MainWindow::gaussianBlurImage(int kernelXY, double sigmaX /*= (0.0)*/, double sigmaY /*= (0.0)*/, int borderType /*= 4*/)
 {
+    if (imageIsLoaded) {
     imageManipulator->gaussianBlurImage(kernelXY, sigmaX, sigmaY, borderType);
     refreshImage();
+    }
 }
 
 /* Get a rotated version of ImageManipulator current image using warpAffine with rotation matrix 2D */
@@ -138,22 +171,48 @@ void MainWindow::rotateImage(double angle, double scale /*= (1.0)*/, int flags /
 /* Lighten & Contrast an Image */
 void MainWindow::brightenAndContrastImage(double alpha /*= (1.0)*/, double beta /*= (0.0)*/, int rtype /*= (-1)*/)
 {
+    if (imageIsLoaded) {
     imageManipulator->brightenAndContrastImage(alpha, beta, rtype);
     refreshImage();
+    }
 }
 
 /* Contrast an Image */
-void MainWindow::brightenImage(double beta /*= (0.0)*/, int rtype /*= (-1)*/)
+void MainWindow::contrastImage(double beta /*= (0.0)*/, int rtype /*= (-1)*/)
 {
-    imageManipulator->brightenImage(beta, rtype);
+    if (imageIsLoaded) {
+    imageManipulator->contrastImage(beta, rtype);
     refreshImage();
+    }
+}
+
+/* Contrast an Image */
+void MainWindow::contrastImage2(int beta /*= (0.0)*/)
+{
+    if (imageIsLoaded) {
+    double beta2 = 0.0 + beta;
+    imageManipulator->contrastImage(beta2);
+    refreshImage();
+    }
 }
 
 /* Lighten an Image */
 void MainWindow::lightenImage(double alpha /*= (1.0)*/, int rtype /*= (-1)*/)
 {
-    imageManipulator->lightenImage(alpha, rtype);
+    if (imageIsLoaded) {
+    double alpha2 = 0.0 + alpha;
+    imageManipulator->lightenImage(alpha2, rtype);
     refreshImage();
+    }
+}
+
+/* Contrast an Image */
+void MainWindow::lightenImage2(int beta /*= (0.0)*/)
+{
+    if (imageIsLoaded) {
+    imageManipulator->lightenImage(beta);
+    refreshImage();
+    }
 }
 
 /* Resize an Image */

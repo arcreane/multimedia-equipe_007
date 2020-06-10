@@ -127,14 +127,31 @@ int ImageManipulator::blurImage(int kernelXY, Point anchor /*= Point(-1,-1)*/, i
     return blurImage(kernelXY, kernelXY, anchor, borderType);
 }
 
+int slider = 5;
+
 /* Set image to a blurred version using gaussian blur */
 int ImageManipulator::gaussianBlurImage(int kernelX, int kernelY, double sigmaX /*= (0.0)*/, double sigmaY /*= (0.0)*/, int borderType /*= 4*/)
 {
     Mat gaussianBlurredImage;
+   // GaussianBlur(image, image_blurred, Size(slider, slider), 0);
+
     // gaussian blur image
     GaussianBlur(currentImageState.image, gaussianBlurredImage, Size(kernelX, kernelY), sigmaX, sigmaY, borderType);
+    //createTrackbar("Kernel Size", "Blurred image", &slider, 100,  startBlur);
+
+    createTrackbar("Kernel Size", "Blurred image", &slider, 100,  startBlur);
+
     setImage(gaussianBlurredImage);
     return 0;
+}
+
+
+void startBlur(int, void *){
+    Mat gaussianBlurredImage;
+    slider = slider % 2 == 0 ? slider + 1 : slider;
+    //GaussianBlur(ImageManipulator::getImage(), gaussianBlurredImage, Size(slider, slider),0);
+    //ImageManipulator::setImage(gaussianBlurredImage);
+
 }
 
 /* Set image to a blurred version using gaussian blur */
@@ -166,7 +183,7 @@ int ImageManipulator::brightenAndContrastImage(double alpha /*= (1.0)*/, double 
 }
 
 /* Contrast an Image */
-int ImageManipulator::brightenImage(double beta /*= (0.0)*/, int rtype /*= (-1)*/)
+int ImageManipulator::contrastImage(double beta /*= (0.0)*/, int rtype /*= (-1)*/)
 {
     //increase or decrease the brightness
     return brightenAndContrastImage(1, beta, rtype);

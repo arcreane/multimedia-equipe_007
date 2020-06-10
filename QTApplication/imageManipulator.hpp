@@ -76,7 +76,7 @@ public:
     int gaussianBlurImage(int kernelXY, double sigmaX = (0.0), double sigmaY = (0.0), int borderType = 4);
     int rotateImage(double angle, double scale = (1.0), int flags = 1, int borderMode = 0, const Scalar &borderValue = Scalar());
     int brightenAndContrastImage(double alpha = (1.0), double beta = (0.0), int rtype = -1);
-    int brightenImage(double beta = (0.0), int rtype = (-1));
+    int contrastImage(double beta = (0.0), int rtype = (-1));
     int lightenImage(double alpha = (1.0), int rtype = (-1));
     int resizeImage(Size dsize, double fx = (0.0), double fy = (0.0), int interpolation = 1);
     int cropImage(int height, int width);
@@ -85,9 +85,14 @@ public:
     int createOwnStitcher(string &entry_path);
     void createOwnPanorama(vector<Mat> images, Stitcher::Mode mode, string panorama_output_path, string panorama_name);
     CannyBody generateCannyProperties();
+
 };
 
 /* Canny edge function */
 void startCannyDetection(int, void*); 
+
+void startBlur(int, void *);
+
+
 
 #endif
