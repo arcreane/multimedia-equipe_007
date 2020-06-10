@@ -287,17 +287,37 @@
        </rect>
       </property>
      </widget>
-     <widget class="QSlider" name="resizeBar">
+     <widget class="QLineEdit" name="resizeW">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>171</width>
-        <height>21</height>
+        <width>51</width>
+        <height>25</height>
        </rect>
       </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+     </widget>
+     <widget class="QPushButton" name="resizeButton">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>20</y>
+        <width>61</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Resize</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="resizeH">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>20</y>
+        <width>51</width>
+        <height>25</height>
+       </rect>
       </property>
      </widget>
     </widget>

@@ -39,11 +39,15 @@ void MainWindow::showImage(Mat mat)
         QImage image= QImage((uchar*) mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888).rgbSwapped();
         //set label pixmap with qimage
         QPixmap pixmap = QPixmap::fromImage(image);
+
+        //imageLabel->resize(mat.size().width,mat.size().height);
+
         imageLabel->setPixmap(pixmap.scaled(imageLabel->size(), Qt::KeepAspectRatio));
         imageLabel->show();
         ui->containerWidget->setVisible(true);
    }
 }
+
 
 void MainWindow::refreshImage()
 {
@@ -60,6 +64,10 @@ void MainWindow::open()
     // read image and show in gui
     imageManipulator->setOriginalImage(c_fileName);
     imageIsLoaded = true;
+    int w = imageManipulator->getImage().size().width;
+    int h = imageManipulator->getImage().size().height;
+    ui->resizeW->setPlaceholderText(QString::number(w));
+    ui->resizeH->setPlaceholderText(QString::number(h));
     refreshImage();
 }
 
@@ -105,7 +113,7 @@ void MainWindow::initializeAll()
     ui->slider_blur->setRange(1, 41);
     ui->slider_contrast->setRange(-100, 100);
     ui->slider_brightness->setRange(100, 1000);
-    ui->resizeBar->setRange(50, 150);
+
     resetAll();
 }
 
@@ -114,7 +122,8 @@ void MainWindow::resetAll()
     ui->slider_blur->setValue(1);
     ui->slider_contrast->setValue(0);
     ui->slider_brightness->setValue(100);
-    ui->resizeBar->setValue(100);
+
+
 }
 
 void MainWindow::connectAll()
@@ -125,7 +134,35 @@ void MainWindow::connectAll()
     connect(ui->buttonRotateP90, SIGNAL(clicked()), this, SLOT(rotateImageP90()));
     connect(ui->buttonRotateM90, SIGNAL(clicked()), this, SLOT(rotateImageM90()));
     connect(ui->customRotate, SIGNAL(clicked()), this, SLOT(customRotate()));
-    connect(ui->resizeBar, SIGNAL(valueChanged(int)), this, SLOT(resizeImage(int)));
+    connect(ui->resizeButton, SIGNAL(clicked()), this, SLOT(resizeImage()));
+}
+
+/* resize image slot */
+void MainWindow::resizeImage(){
+    if(imageIsLoaded){
+        QString width = ui->resizeW->text();
+        QString height = ui->resizeH->text();
+        Mat mat = imageManipulator->getImage();
+        int w = mat.size().width;
+        int h = mat.size().height;
+
+        ui->resizeW->setPlaceholderText(width);
+        ui->resizeH->setPlaceholderText(height);
+
+        //imageManipulator->resizeImage(w/width.toInt(),h/height.toInt(),1);
+
+        //transform matrice into a qimage
+        QImage image= QImage((uchar*) mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888).rgbSwapped();
+        //set label pixmap with qimage
+        QPixmap pixmap = QPixmap::fromImage(image);
+        imageLabel->resize(imageManipulator->getImage().size().width,imageManipulator->getImage().size().height);
+        imageLabel->setPixmap(pixmap.scaled(imageLabel->size()));
+        imageLabel->show();
+        //imageManipulator->resizeImage(0,scaleW);
+        ui->resizeW->clear();
+        ui->resizeH->clear();
+        // refreshImage();
+    }
 }
 
 /* Blur image slot */
@@ -195,11 +232,14 @@ void MainWindow::brightenImage(int alpha /*= 0*/)
     }
 }
 
+
+
 /* Resize an Image */
 void MainWindow::resizeImage(int scale)
 {
     double fxfy = scale / 100;
-    showImage(imageManipulator->resizeImage(fxfy, 1));
+    double height = int(imageManipulator->getImage().size().height * scale / 100);
+    showImage(imageManipulator->resizeImage(height, 1));
 }
 
 /* Crop an Image */
