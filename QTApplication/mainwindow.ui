@@ -23,7 +23,7 @@
       <x>10</x>
       <y>10</y>
       <width>441</width>
-      <height>471</height>
+      <height>541</height>
      </rect>
     </property>
    </widget>
@@ -33,23 +33,23 @@
       <x>470</x>
       <y>10</y>
       <width>211</width>
-      <height>471</height>
+      <height>541</height>
      </rect>
     </property>
     <widget class="QWidget" name="contrastWidget" native="true">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>240</y>
-       <width>191</width>
-       <height>141</height>
+       <x>0</x>
+       <y>80</y>
+       <width>201</width>
+       <height>101</height>
       </rect>
      </property>
      <widget class="QLabel" name="label_3">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
+        <y>10</y>
         <width>181</width>
         <height>17</height>
        </rect>
@@ -62,7 +62,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>50</y>
+        <y>30</y>
         <width>171</width>
         <height>21</height>
        </rect>
@@ -75,20 +75,20 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>80</y>
+        <y>60</y>
         <width>181</width>
         <height>17</height>
        </rect>
       </property>
       <property name="text">
-       <string>brightness</string>
+       <string>Brightness</string>
       </property>
      </widget>
      <widget class="QSlider" name="slider_brightness">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>110</y>
+        <y>80</y>
         <width>171</width>
         <height>21</height>
        </rect>
@@ -101,17 +101,17 @@
     <widget class="QWidget" name="blurWidget" native="true">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>80</y>
-       <width>191</width>
-       <height>141</height>
+       <x>0</x>
+       <y>0</y>
+       <width>201</width>
+       <height>71</height>
       </rect>
      </property>
      <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>40</y>
+        <y>30</y>
         <width>181</width>
         <height>17</height>
        </rect>
@@ -120,11 +120,11 @@
        <string>kernel size for blurring</string>
       </property>
      </widget>
-     <widget class="QSlider" name="slider">
+     <widget class="QSlider" name="slider_blur">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>70</y>
+        <y>50</y>
         <width>171</width>
         <height>21</height>
        </rect>
@@ -147,6 +147,310 @@
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="rotationWidget" native="true">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>350</y>
+       <width>201</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <widget class="QPushButton" name="buttonRotateM90">
+      <property name="geometry">
+       <rect>
+        <x>100</x>
+        <y>10</y>
+        <width>89</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Rotate - 90°</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="buttonRotateP90">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>10</y>
+        <width>89</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Rotate + 90°</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="customRotate">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>60</y>
+        <width>61</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Rotate</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelRotate">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>40</y>
+        <width>181</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Custom rotation</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="customRotateInput">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>113</width>
+        <height>25</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="widget" native="true">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>440</y>
+       <width>201</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <widget class="QLabel" name="labelResize">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>0</y>
+        <width>181</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Resize</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="labelCrop">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>181</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Crop inputs</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="cropButton">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>70</y>
+        <width>61</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Crop</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="cropInputX">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>70</y>
+        <width>51</width>
+        <height>25</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="cropInputY">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>70</y>
+        <width>51</width>
+        <height>25</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QSlider" name="resizeBar">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>171</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="contrastWidget_2" native="true">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>190</y>
+       <width>201</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <widget class="QLabel" name="erosionLabel">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>181</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Erosion</string>
+      </property>
+     </widget>
+     <widget class="QSlider" name="erosionBar">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>171</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="erosionRadio1">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>30</y>
+        <width>61</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Cross</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="erosionRadio0">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>61</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Rect</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="erosionRadio2">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>30</y>
+        <width>71</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Ellipse</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="contrastWidget_3" native="true">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>270</y>
+       <width>201</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <widget class="QLabel" name="dilationLabel">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>181</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Dilation</string>
+      </property>
+     </widget>
+     <widget class="QSlider" name="dilationBar">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>171</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="dilationRadio1">
+      <property name="geometry">
+       <rect>
+        <x>70</x>
+        <y>30</y>
+        <width>61</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Cross</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="dilationRadio0">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>61</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Rect</string>
+      </property>
+     </widget>
+     <widget class="QRadioButton" name="dilationRadio2">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>30</y>
+        <width>71</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Ellipse</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -163,7 +467,6 @@
      <string>Files</string>
     </property>
     <addaction name="actionOpen"/>
-    <addaction name="separator"/>
     <addaction name="actionSave"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
@@ -182,11 +485,14 @@
     <property name="title">
      <string>Images</string>
     </property>
-    <addaction name="actionChangeColor"/>
-    <addaction name="actionDetectEdges"/>
     <addaction name="actionReset"/>
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
+    <addaction name="separator"/>
+    <addaction name="actionToGrey"/>
+    <addaction name="actionDetectEdges"/>
+    <addaction name="separator"/>
+    <addaction name="actionPanorama"/>
    </widget>
    <addaction name="menuFiles"/>
    <addaction name="menuSettings"/>
@@ -205,9 +511,13 @@
    </attribute>
    <addaction name="actionOpen"/>
    <addaction name="actionSave"/>
+   <addaction name="separator"/>
    <addaction name="actionReset"/>
    <addaction name="actionUndo"/>
    <addaction name="actionRedo"/>
+   <addaction name="separator"/>
+   <addaction name="actionToGrey"/>
+   <addaction name="actionDetectEdges"/>
    <addaction name="separator"/>
    <addaction name="actionPanorama"/>
   </widget>
@@ -232,7 +542,7 @@
     <string>About</string>
    </property>
   </action>
-  <action name="actionChangeColor">
+  <action name="actionToGrey">
    <property name="text">
     <string>To grey</string>
    </property>
@@ -290,7 +600,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionChangeColor</sender>
+   <sender>actionToGrey</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>imageToGrey()</slot>

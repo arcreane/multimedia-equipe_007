@@ -48,6 +48,7 @@ struct ImageState {
 class ImageManipulator
 {
 private:
+    int slider;
     ImageState currentImageState;
     Mat originalImage;
     int currentChangesIndex;
@@ -69,23 +70,22 @@ public:
     int undo();
     int redo();
     int imageToGrey();
-    int imageToColor();
-    int blurImage(int kernelX, int kernelY, Point anchor = Point(-1, -1), int borderType = 4);
-    int blurImage(int kernelXY, Point anchor = Point(-1, -1), int borderType = 4);
-    int gaussianBlurImage(int kernelX, int kernelY, double sigmaX = (0.0), double sigmaY = (0.0), int borderType = 4);
-    int gaussianBlurImage(int kernelXY, double sigmaX = (0.0), double sigmaY = (0.0), int borderType = 4);
+    Mat blurImage(int kernelX, int kernelY, Point anchor = Point(-1, -1), int borderType = 4);
+    Mat blurImage(int kernelXY, Point anchor = Point(-1, -1), int borderType = 4);
+    Mat gaussianBlurImage(int kernelX, int kernelY, double sigmaX = (0.0), double sigmaY = (0.0), int borderType = 4);
+    Mat gaussianBlurImage(int kernelXY, double sigmaX = (0.0), double sigmaY = (0.0), int borderType = 4);
     int rotateImage(double angle, double scale = (1.0), int flags = 1, int borderMode = 0, const Scalar &borderValue = Scalar());
-    int brightenAndContrastImage(double alpha = (1.0), double beta = (0.0), int rtype = -1);
-    int contrastImage(double beta = (0.0), int rtype = (-1));
-    int lightenImage(double alpha = (1.0), int rtype = (-1));
-    int resizeImage(Size dsize, double fx = (0.0), double fy = (0.0), int interpolation = 1);
+    Mat brightenAndContrastImage(double alpha = (1.0), double beta = (0.0), int rtype = -1);
+    Mat contrastImage(double beta = (0.0), int rtype = (-1));
+    Mat brightenImage(double alpha = (1.0), int rtype = (-1));
+    Mat resizeImage(double fx = (0.0), double fy = (0.0), int interpolation = 1);
+    Mat resizeImage(double fxfy = (0.0), int interpolation = 1);
     int cropImage(int height, int width);
     int dilateImage(int dilation_elem, int dilation_size);
     int erodeImage(int dilation_elem, int dilation_size);
     int createOwnStitcher(string &entry_path);
     void createOwnPanorama(vector<Mat> images, Stitcher::Mode mode, string panorama_output_path, string panorama_name);
     CannyBody generateCannyProperties();
-
 };
 
 /* Canny edge function */

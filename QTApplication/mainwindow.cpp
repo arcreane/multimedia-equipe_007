@@ -5,7 +5,9 @@
 #include "qgridlayout.h"
 #include "qpushbutton.h"
 #include "qslider.h"
+#include "qlineedit.h"
 
+/* CONSTRUCTOR */
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -16,17 +18,12 @@ MainWindow::MainWindow(QWidget *parent)
     imageManipulator = new ImageManipulator();
     imageIsLoaded = false;
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
-    ui->slider->setRange(0, 10);
-    ui->slider->setValue(0);
-    ui->slider_contrast->setRange(0, 100);
-    ui->slider_contrast->setValue(0);
-    ui->slider_brightness->setRange(1, 3);
-    ui->slider_brightness->setValue(1);
     ui->containerWidget->setVisible(false);
-    instantiateFunctions();
-
+    initializeAll();
+    connectAll();
 }
 
+/* DESTRUCTOR */
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -35,18 +32,16 @@ MainWindow::~MainWindow()
 void MainWindow::showImage(Mat mat)
 {
    if (imageIsLoaded) {
-   if (imageManipulator->getColorType() == GRAY_IMAGE){
-       cvtColor(mat, mat, CV_GRAY2RGB);
-   }
-
-    //transform matrice into a qimage
-    QImage image= QImage((uchar*) mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888).rgbSwapped();
-    //set label pixmap with qimage
-    QPixmap pixmap = QPixmap::fromImage(image);
-    imageLabel->setPixmap(pixmap.scaled(imageLabel->size(), Qt::KeepAspectRatio));
-    imageLabel->show();
-    ui->containerWidget->setVisible(true);
-
+        if (imageManipulator->getColorType() == GRAY_IMAGE){
+            cvtColor(mat, mat, CV_GRAY2RGB);
+        }
+        //transform matrice into a qimage
+        QImage image= QImage((uchar*) mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888).rgbSwapped();
+        //set label pixmap with qimage
+        QPixmap pixmap = QPixmap::fromImage(image);
+        imageLabel->setPixmap(pixmap.scaled(imageLabel->size(), Qt::KeepAspectRatio));
+        imageLabel->show();
+        ui->containerWidget->setVisible(true);
    }
 }
 
@@ -74,6 +69,7 @@ void MainWindow::reset()
     if (imageIsLoaded) {
         imageManipulator->reset();
         refreshImage();
+        resetAll();
     }
 }
 
@@ -104,142 +100,128 @@ void MainWindow::imageToGrey()
     }
 }
 
-/* Set image to its colored version */
-void MainWindow::imageToColor()
+void MainWindow::initializeAll()
 {
-    if (imageIsLoaded) {
-        imageManipulator->imageToColor();
-        refreshImage();
-    }
+    ui->slider_blur->setRange(1, 41);
+    ui->slider_contrast->setRange(-100, 100);
+    ui->slider_brightness->setRange(100, 1000);
+    ui->resizeBar->setRange(50, 150);
+    resetAll();
 }
 
-void MainWindow::instantiateFunctions(){
-    // gaussian blur
-    if (ui->gaussianBox->isChecked()){
-         ui->slider->setValue(0);
-         connect(ui->slider, SIGNAL(valueChanged(int)), this, SLOT(gaussianBlurImage(int)));
+void MainWindow::resetAll()
+{
+    ui->slider_blur->setValue(1);
+    ui->slider_contrast->setValue(0);
+    ui->slider_brightness->setValue(100);
+    ui->resizeBar->setValue(100);
+}
+
+void MainWindow::connectAll()
+{
+    connect(ui->slider_blur, SIGNAL(valueChanged(int)), this, SLOT(blurImage(int)));
+    connect(ui->slider_contrast,SIGNAL(valueChanged(int)), this, SLOT(contrastImage(int)));
+    connect(ui->slider_brightness,SIGNAL(valueChanged(int)), this, SLOT(brightenImage(int)));
+    connect(ui->buttonRotateP90, SIGNAL(clicked()), this, SLOT(rotateImageP90()));
+    connect(ui->buttonRotateM90, SIGNAL(clicked()), this, SLOT(rotateImageM90()));
+    connect(ui->customRotate, SIGNAL(clicked()), this, SLOT(customRotate()));
+    connect(ui->resizeBar, SIGNAL(valueChanged(int)), this, SLOT(resizeImage(int)));
+}
+
+/* Blur image slot */
+void MainWindow::blurImage(int kernelXY){
+    if(ui->gaussianBox->isChecked()){
+        gaussianBlurImage(kernelXY);
+    } else {
+        classicBlurImage(kernelXY);
     }
-    else {
-    ui->slider->setValue(0);
-    connect(ui->slider, SIGNAL(valueChanged(int)), this, SLOT(blurImage(int)));
-    }
-    connect(ui->slider_contrast,SIGNAL(valueChanged(int)), this, SLOT(contrastImage2(int)));
-    connect(ui->slider_brightness,SIGNAL(valueChanged(int)), this, SLOT(lightenImage2(int)));
-    refreshImage();
 }
 
 /* Set image to a blurred version using classic blur */
-void MainWindow::blurImage(int kernelX, int kernelY, Point anchor /*= Point(-1,-1)*/, int borderType /*= 4*/)
+void MainWindow::classicBlurImage(int kernelXY, Point anchor /*= Point(-1,-1)*/, int borderType /*= 4*/)
 {
-
-    imageManipulator->blurImage(kernelX, kernelY, anchor, borderType);
-    refreshImage();
-}
-
-/* Set image to a blurred version using classic blur */
-void MainWindow::blurImage(int kernelXY, Point anchor /*= Point(-1,-1)*/, int borderType /*= 4*/)
-{
-    imageManipulator->blurImage(kernelXY, anchor, borderType);
-    refreshImage();
-}
-
-/* Set image to a blurred version using gaussian blur */
-void MainWindow::gaussianBlurImage(int kernelX, int kernelY, double sigmaX /*= (0.0)*/, double sigmaY /*= (0.0)*/, int borderType /*= 4*/)
-{
-    if (imageIsLoaded) {
-    imageManipulator->gaussianBlurImage(kernelX, kernelY, sigmaX, sigmaY, borderType);
-    refreshImage();
+    if(imageIsLoaded){
+        showImage(imageManipulator->blurImage(kernelXY, anchor, borderType));
     }
 }
 
 /* Set image to a blurred version using gaussian blur */
 void MainWindow::gaussianBlurImage(int kernelXY, double sigmaX /*= (0.0)*/, double sigmaY /*= (0.0)*/, int borderType /*= 4*/)
 {
-    if (imageIsLoaded) {
-    imageManipulator->gaussianBlurImage(kernelXY, sigmaX, sigmaY, borderType);
-    refreshImage();
+    if (imageIsLoaded && (kernelXY%2 != 0)) {
+        showImage(imageManipulator->gaussianBlurImage(kernelXY, sigmaX, sigmaY, borderType));
     }
 }
 
-/* Get a rotated version of ImageManipulator current image using warpAffine with rotation matrix 2D */
-void MainWindow::rotateImage(double angle, double scale /*= (1.0)*/, int flags /*= 1*/, int borderMode /*= 0*/, const Scalar &borderValue /*= Scalar()*/)
+void MainWindow::rotateImageP90()
 {
-    imageManipulator->rotateImage(angle, scale, flags, borderMode, borderValue);
-    refreshImage();
-}
-
-/* Lighten & Contrast an Image */
-void MainWindow::brightenAndContrastImage(double alpha /*= (1.0)*/, double beta /*= (0.0)*/, int rtype /*= (-1)*/)
-{
-    if (imageIsLoaded) {
-    imageManipulator->brightenAndContrastImage(alpha, beta, rtype);
-    refreshImage();
+    if(imageIsLoaded){
+        imageManipulator->rotateImage(90);
+        refreshImage();
     }
 }
 
-/* Contrast an Image */
-void MainWindow::contrastImage(double beta /*= (0.0)*/, int rtype /*= (-1)*/)
+void MainWindow::rotateImageM90()
 {
-    if (imageIsLoaded) {
-    imageManipulator->contrastImage(beta, rtype);
-    refreshImage();
+    if(imageIsLoaded){
+        imageManipulator->rotateImage(-90);
+        refreshImage();
     }
 }
 
-/* Contrast an Image */
-void MainWindow::contrastImage2(int beta /*= (0.0)*/)
+void MainWindow::customRotate()
 {
-    if (imageIsLoaded) {
-    double beta2 = 0.0 + beta;
-    imageManipulator->contrastImage(beta2);
-    refreshImage();
-    }
-}
-
-/* Lighten an Image */
-void MainWindow::lightenImage(double alpha /*= (1.0)*/, int rtype /*= (-1)*/)
-{
-    if (imageIsLoaded) {
-    double alpha2 = 0.0 + alpha;
-    imageManipulator->lightenImage(alpha2, rtype);
-    refreshImage();
+    if(imageIsLoaded){
+        QString radiusStr = ui->customRotateInput->text();
+        imageManipulator->rotateImage(radiusStr.toInt());
+        ui->customRotateInput->clear();
+        refreshImage();
     }
 }
 
 /* Contrast an Image */
-void MainWindow::lightenImage2(int beta /*= (0.0)*/)
+void MainWindow::contrastImage(int beta /*= 0*/)
 {
     if (imageIsLoaded) {
-    imageManipulator->lightenImage(beta);
-    refreshImage();
+        showImage(imageManipulator->contrastImage(beta));
+    }
+}
+
+/* Contrast an Image */
+void MainWindow::brightenImage(int alpha /*= 0*/)
+{
+    if (imageIsLoaded) {
+        showImage(imageManipulator->brightenImage(alpha/100));
     }
 }
 
 /* Resize an Image */
-void MainWindow::resizeImage(Size dsize, double fx /*= (0.0)*/, double fy /*= (0.0)*/, int interpolation /*= (1)*/)
+void MainWindow::resizeImage(int scale)
 {
-    imageManipulator->resizeImage(dsize, fx, fy, interpolation);
-    refreshImage();
+    double fxfy = scale / 100;
+    showImage(imageManipulator->resizeImage(fxfy, 1));
 }
 
 /* Crop an Image */
-void MainWindow::cropImage(int height, int width)
+void MainWindow::cropImage()
 {
-    imageManipulator->cropImage(height, width);
+    QString newWidth = ui->cropInputX->text();
+    QString newHeight = ui->cropInputY->text();
+    imageManipulator->cropImage(newHeight.toInt(), newWidth.toInt());
     refreshImage();
 }
 
 /* Dilate an Image */
-void MainWindow::dilateImage(int dilation_elem, int dilation_size)
+void MainWindow::dilateImage(int dilation_size)
 {
-    imageManipulator->dilateImage(dilation_elem, dilation_size);
+    //imageManipulator->dilateImage(dilation_elem, dilation_size);
     refreshImage();
 }
 
 /* Erode an Image */
-void MainWindow::erodeImage(int erosion_elem, int erosion_size)
+void MainWindow::erodeImage(int erode_size)
 {
-    imageManipulator->erodeImage(erosion_elem, erosion_size);
+    //imageManipulator->erodeImage(erosion_elem, erode_size);
     refreshImage();
 }
 

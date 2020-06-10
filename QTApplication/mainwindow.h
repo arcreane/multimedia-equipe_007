@@ -25,40 +25,38 @@ public:
 
 public slots:
     void open();
-    void showImage(Mat mat);
-    void refreshImage();
     void reset();
     void undo();
     void redo();
     void imageToGrey();
     void detectEdges();
     void createPanorama();
-    void imageToColor();
-    void instantiateFunctions();
-    void blurImage(int kernelX, int kernelY, Point anchor = Point(-1, -1), int borderType = 4);
-    void blurImage(int kernelXY, Point anchor = Point(-1, -1), int borderType = 4);
-    void gaussianBlurImage(int kernelX, int kernelY, double sigmaX = (0.0), double sigmaY = (0.0), int borderType = 4);
-    void gaussianBlurImage(int kernelXY, double sigmaX = (0.0), double sigmaY = (0.0), int borderType = 4);
-    void rotateImage(double angle, double scale = (1.0), int flags = 1, int borderMode = 0, const Scalar &borderValue = Scalar());
-    void brightenAndContrastImage(double alpha = (1.0), double beta = (0.0), int rtype = -1);
-    void contrastImage(double beta = (0.0), int rtype = (-1));
-    void lightenImage(double alpha = (1.0), int rtype = (-1));
-    void contrastImage2(int beta = (0.0));
-    void lightenImage2(int alpha = (1.0));
-    void resizeImage(Size dsize, double fx = (0.0), double fy = (0.0), int interpolation = 1);
-    void cropImage(int height, int width);
-    void dilateImage(int dilation_elem, int dilation_size);
-    void erodeImage(int dilation_elem, int dilation_size);
-
+    void blurImage(int kernelXY);
+    void rotateImageP90();
+    void rotateImageM90();
+    void customRotate();
+    void contrastImage(int beta = 0);
+    void brightenImage(int alpha = 1);
+    void resizeImage(int scale);
+    void cropImage();
+    void dilateImage(int dilation_size);
+    void erodeImage(int erode_size);
 
 private:
+    // private attributes
     Ui::MainWindow *ui;
     QLabel *imageLabel;
     ImageManipulator *imageManipulator;
     bool imageIsLoaded;
     Mat imageToModify;
+    // private functions
+    void showImage(Mat mat);
+    void refreshImage();
+    void initializeAll();
+    void resetAll();
+    void connectAll();
+    void classicBlurImage(int kernelXY, Point anchor = Point(-1, -1), int borderType = 4);
+    void gaussianBlurImage(int kernelXY, double sigmaX = (0.0), double sigmaY = (0.0), int borderType = 4);
 };
-
-
 
 #endif // MAINWINDOW_H
