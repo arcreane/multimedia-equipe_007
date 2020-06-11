@@ -73,24 +73,6 @@ void MainWindow::reset()
     }
 }
 
-/* Undo function */
-void MainWindow::undo()
-{
-    if (imageIsLoaded) {
-        imageManipulator->undo();
-        refreshImage();
-    }
-}
-
-/* Redo function */
-void MainWindow::redo()
-{
-    if (imageIsLoaded) {
-        imageManipulator->redo();
-        refreshImage();
-    }
-}
-
 /* Set image to its grey version */
 void MainWindow::imageToGrey()
 {
@@ -106,15 +88,30 @@ void MainWindow::initializeAll()
     ui->slider_contrast->setRange(-100, 100);
     ui->slider_brightness->setRange(100, 1000);
     ui->resizeBar->setRange(50, 150);
+    ui->erosionBar->setRange(0, 10);
+    ui->dilationBar->setRange(0, 10);
     resetAll();
 }
 
 void MainWindow::resetAll()
 {
+    // blur
+    ui->gaussianBox->setChecked(true);
+    // erosion radio buttons
+    ui->erosionRadio0->setChecked(true);
+    ui->erosionRadio0->setChecked(false);
+    ui->erosionRadio0->setChecked(false);
+    // dilation radio buttons
+    ui->dilationRadio0->setChecked(true);
+    ui->dilationRadio0->setChecked(false);
+    ui->dilationRadio0->setChecked(false);
+    // sliders
     ui->slider_blur->setValue(1);
     ui->slider_contrast->setValue(0);
     ui->slider_brightness->setValue(100);
     ui->resizeBar->setValue(100);
+    ui->erosionBar->setValue(0);
+    ui->dilationBar->setValue(0);
 }
 
 void MainWindow::connectAll()
@@ -126,6 +123,9 @@ void MainWindow::connectAll()
     connect(ui->buttonRotateM90, SIGNAL(clicked()), this, SLOT(rotateImageM90()));
     connect(ui->customRotate, SIGNAL(clicked()), this, SLOT(customRotate()));
     connect(ui->resizeBar, SIGNAL(valueChanged(int)), this, SLOT(resizeImage(int)));
+    connect(ui->erosionBar, SIGNAL(valueChanged(int)), this, SLOT(erodeImage(int)));
+    connect(ui->dilationBar, SIGNAL(valueChanged(int)), this, SLOT(dilateImage(int)));
+    connect(ui->cropButton, SIGNAL(clicked()), this, SLOT(cropImage()));
 }
 
 /* Blur image slot */
@@ -205,24 +205,37 @@ void MainWindow::resizeImage(int scale)
 /* Crop an Image */
 void MainWindow::cropImage()
 {
-    QString newWidth = ui->cropInputX->text();
-    QString newHeight = ui->cropInputY->text();
-    imageManipulator->cropImage(newHeight.toInt(), newWidth.toInt());
-    refreshImage();
+    int newWidth = ui->cropInputX->text().toInt();
+    int newHeight = ui->cropInputY->text().toInt();
+    Mat currentImg = imageManipulator->getImage();
+    if((newWidth <= currentImg.size().width) && (newHeight <= currentImg.size().height)){
+        imageManipulator->cropImage(newHeight, newWidth);
+        refreshImage();
+    }
 }
 
 /* Dilate an Image */
 void MainWindow::dilateImage(int dilation_size)
 {
-    //imageManipulator->dilateImage(dilation_elem, dilation_size);
-    refreshImage();
+    int type = 0;
+    if(ui->dilationRadio1->isChecked()){
+        type = 1;
+    } else if(ui->dilationRadio2->isChecked()){
+        type = 2;
+    }
+    showImage(imageManipulator->dilateImage(type, dilation_size));
 }
 
 /* Erode an Image */
 void MainWindow::erodeImage(int erode_size)
 {
-    //imageManipulator->erodeImage(erosion_elem, erode_size);
-    refreshImage();
+    int type = 0;
+    if(ui->erosionRadio1->isChecked()){
+        type = 1;
+    } else if(ui->erosionRadio2->isChecked()){
+        type = 2;
+    }
+    showImage(imageManipulator->erodeImage(type, erode_size));
 }
 
 /* Detect Edges */

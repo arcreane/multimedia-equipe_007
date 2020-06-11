@@ -51,8 +51,6 @@ private:
     int slider;
     ImageState currentImageState;
     Mat originalImage;
-    int currentChangesIndex;
-    vector<ImageState> lastChanges;
 
 public:
     // Constructors
@@ -67,8 +65,6 @@ public:
     int setOriginalImage(char *imageName);
     // Methods
     int reset();
-    int undo();
-    int redo();
     int imageToGrey();
     Mat blurImage(int kernelX, int kernelY, Point anchor = Point(-1, -1), int borderType = 4);
     Mat blurImage(int kernelXY, Point anchor = Point(-1, -1), int borderType = 4);
@@ -81,8 +77,8 @@ public:
     Mat resizeImage(double fx = (0.0), double fy = (0.0), int interpolation = 1);
     Mat resizeImage(double fxfy = (0.0), int interpolation = 1);
     int cropImage(int height, int width);
-    int dilateImage(int dilation_elem, int dilation_size);
-    int erodeImage(int dilation_elem, int dilation_size);
+    Mat dilateImage(int dilation_elem, int dilation_size);
+    Mat erodeImage(int dilation_elem, int dilation_size);
     int createOwnStitcher(string &entry_path);
     void createOwnPanorama(vector<Mat> images, Stitcher::Mode mode, string panorama_output_path, string panorama_name);
     CannyBody generateCannyProperties();
