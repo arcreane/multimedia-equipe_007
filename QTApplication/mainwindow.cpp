@@ -147,6 +147,8 @@ void MainWindow::connectAll()
 /* resize image slot */
 void MainWindow::resizeImage(){
     if(imageIsLoaded){
+
+
         QString w = ui->resizeW->text();
         QString h = ui->resizeH->text();
 
@@ -168,6 +170,10 @@ void MainWindow::resizeImage(){
 
         else {
 
+       if (imageManipulator->getColorType() == GRAY_IMAGE){
+                cvtColor(mat, mat, CV_GRAY2RGB);
+        }
+
         ui->resizeW->setPlaceholderText(w);
         ui->resizeH->setPlaceholderText(h);
 
@@ -188,7 +194,7 @@ void MainWindow::resizeImage(){
         //imageManipulator->resizeImage(0,scaleW);
         ui->resizeW->clear();
         ui->resizeH->clear();
-        // refreshImage();
+
         }
     }
 }
