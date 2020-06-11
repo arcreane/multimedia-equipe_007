@@ -41,7 +41,7 @@ void MainWindow::showImage(Mat mat)
         //set label pixmap with qimage
         QPixmap pixmap = QPixmap::fromImage(image);
 
-        //imageLabel->resize(mat.size().width,mat.size().height);
+        imageLabel->resize(mat.size().width,mat.size().height);
 
         imageLabel->setPixmap(pixmap.scaled(imageLabel->size(), Qt::KeepAspectRatio));
         imageLabel->show();
@@ -67,18 +67,22 @@ void MainWindow::open()
     imageIsLoaded = true;
     int w = imageManipulator->getImage().size().width;
     int h = imageManipulator->getImage().size().height;
-    width=w;
+
+    width=w;;
     height=h;
     ui->resizeW->setPlaceholderText(QString::number(w));
     ui->resizeH->setPlaceholderText(QString::number(h));
     refreshImage();
 }
 
+
 /* Reset function */
 void MainWindow::reset()
 {
     if (imageIsLoaded) {
         imageManipulator->reset();
+        ui->resizeW->setPlaceholderText(QString::number(width));
+        ui->resizeH->setPlaceholderText(QString::number(height));
         refreshImage();
         resetAll();
     }
@@ -137,6 +141,7 @@ void MainWindow::connectAll()
     connect(ui->erosionBar, SIGNAL(valueChanged(int)), this, SLOT(erodeImage(int)));
     connect(ui->dilationBar, SIGNAL(valueChanged(int)), this, SLOT(dilateImage(int)));
     connect(ui->cropButton, SIGNAL(clicked()), this, SLOT(cropImage()));
+    connect(ui->resizeButton, SIGNAL(clicked()), this, SLOT(resizeImage()));
 }
 
 /* resize image slot */
@@ -166,15 +171,19 @@ void MainWindow::resizeImage(){
         ui->resizeW->setPlaceholderText(w);
         ui->resizeH->setPlaceholderText(h);
 
-        //imageManipulator->resizeImage(w.toInt()/width, h.toInt()/height);
-
-        imageManipulator->resizeImage(w.toInt()/width, h.toInt()/height);
+        bool resultat;
+        int i = w.toInt(&resultat,10);
+        int i2 = h.toInt(&resultat,10);
+        double d = (double)i/(double)width;
+        double d2 = (double)i2/(double)height;
+        imageManipulator->resizeImage(d, d2);
 
         //transform matrice into a qimage
         QImage image= QImage((uchar*) mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888).rgbSwapped();
         //set label pixmap with qimage
         QPixmap pixmap = QPixmap::fromImage(image);
-        imageLabel->setPixmap(pixmap);
+        imageLabel->resize(w.toInt(&resultat,10),h.toInt(&resultat,10));
+        imageLabel->setPixmap(pixmap.scaled(imageLabel->size()));
         imageLabel->show();
         //imageManipulator->resizeImage(0,scaleW);
         ui->resizeW->clear();
