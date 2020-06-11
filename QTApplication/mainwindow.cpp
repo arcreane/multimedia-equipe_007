@@ -98,7 +98,6 @@ void MainWindow::initializeAll()
     ui->slider_blur->setRange(1, 41);
     ui->slider_contrast->setRange(-100, 100);
     ui->slider_brightness->setRange(100, 1000);
-    ui->resizeBar->setRange(50, 150);
     ui->erosionBar->setRange(0, 10);
     ui->dilationBar->setRange(0, 10);
     resetAll();
@@ -120,9 +119,11 @@ void MainWindow::resetAll()
     ui->slider_blur->setValue(1);
     ui->slider_contrast->setValue(0);
     ui->slider_brightness->setValue(100);
-    ui->resizeBar->setValue(100);
     ui->erosionBar->setValue(0);
     ui->dilationBar->setValue(0);
+    // crop inputs
+    ui->cropInputX->clear();
+    ui->cropInputY->clear();
 }
 
 void MainWindow::connectAll()
@@ -133,8 +134,6 @@ void MainWindow::connectAll()
     connect(ui->buttonRotateP90, SIGNAL(clicked()), this, SLOT(rotateImageP90()));
     connect(ui->buttonRotateM90, SIGNAL(clicked()), this, SLOT(rotateImageM90()));
     connect(ui->customRotate, SIGNAL(clicked()), this, SLOT(customRotate()));
-    connect(ui->resizeButton, SIGNAL(clicked()), this, SLOT(resizeImage()));
-    connect(ui->resizeBar, SIGNAL(valueChanged(int)), this, SLOT(resizeImage(int)));
     connect(ui->erosionBar, SIGNAL(valueChanged(int)), this, SLOT(erodeImage(int)));
     connect(ui->dilationBar, SIGNAL(valueChanged(int)), this, SLOT(dilateImage(int)));
     connect(ui->cropButton, SIGNAL(clicked()), this, SLOT(cropImage()));
@@ -271,6 +270,8 @@ void MainWindow::cropImage()
     if((newWidth <= currentImg.size().width) && (newHeight <= currentImg.size().height)){
         imageManipulator->cropImage(newHeight, newWidth);
         refreshImage();
+        ui->cropInputX->clear();
+        ui->cropInputY->clear();
     }
 }
 

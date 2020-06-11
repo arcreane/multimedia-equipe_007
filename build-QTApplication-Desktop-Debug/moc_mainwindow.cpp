@@ -44,11 +44,11 @@ QT_MOC_LITERAL(8, 72, 8), // "kernelXY"
 QT_MOC_LITERAL(9, 81, 14), // "rotateImageP90"
 QT_MOC_LITERAL(10, 96, 14), // "rotateImageM90"
 QT_MOC_LITERAL(11, 111, 12), // "customRotate"
-QT_MOC_LITERAL(12, 124, 13), // "contrastImage"
-QT_MOC_LITERAL(13, 138, 4), // "beta"
-QT_MOC_LITERAL(14, 143, 13), // "brightenImage"
-QT_MOC_LITERAL(15, 157, 5), // "alpha"
-QT_MOC_LITERAL(16, 163, 11), // "resizeImage"
+QT_MOC_LITERAL(12, 124, 11), // "resizeImage"
+QT_MOC_LITERAL(13, 136, 13), // "contrastImage"
+QT_MOC_LITERAL(14, 150, 4), // "beta"
+QT_MOC_LITERAL(15, 155, 13), // "brightenImage"
+QT_MOC_LITERAL(16, 169, 5), // "alpha"
 QT_MOC_LITERAL(17, 175, 5), // "scale"
 QT_MOC_LITERAL(18, 181, 9), // "cropImage"
 QT_MOC_LITERAL(19, 191, 11), // "dilateImage"
@@ -60,10 +60,10 @@ QT_MOC_LITERAL(22, 228, 10) // "erode_size"
     "MainWindow\0open\0\0reset\0imageToGrey\0"
     "detectEdges\0createPanorama\0blurImage\0"
     "kernelXY\0rotateImageP90\0rotateImageM90\0"
-    "customRotate\0contrastImage\0beta\0"
-    "brightenImage\0alpha\0resizeImage\0scale\0"
-    "cropImage\0dilateImage\0dilation_size\0"
-    "erodeImage\0erode_size"
+    "customRotate\0resizeImage\0contrastImage\0"
+    "beta\0brightenImage\0alpha\0scale\0cropImage\0"
+    "dilateImage\0dilation_size\0erodeImage\0"
+    "erode_size"
 };
 #undef QT_MOC_LITERAL
 
@@ -73,7 +73,7 @@ static const uint qt_meta_data_MainWindow[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-      17,   14, // methods
+      18,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -81,23 +81,24 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   99,    2, 0x0a /* Public */,
-       3,    0,  100,    2, 0x0a /* Public */,
-       4,    0,  101,    2, 0x0a /* Public */,
-       5,    0,  102,    2, 0x0a /* Public */,
-       6,    0,  103,    2, 0x0a /* Public */,
-       7,    1,  104,    2, 0x0a /* Public */,
-       9,    0,  107,    2, 0x0a /* Public */,
-      10,    0,  108,    2, 0x0a /* Public */,
-      11,    0,  109,    2, 0x0a /* Public */,
-      12,    1,  110,    2, 0x0a /* Public */,
-      12,    0,  113,    2, 0x2a /* Public | MethodCloned */,
-      14,    1,  114,    2, 0x0a /* Public */,
-      14,    0,  117,    2, 0x2a /* Public | MethodCloned */,
-      16,    1,  118,    2, 0x0a /* Public */,
-      18,    0,  121,    2, 0x0a /* Public */,
-      19,    1,  122,    2, 0x0a /* Public */,
-      21,    1,  125,    2, 0x0a /* Public */,
+       1,    0,  104,    2, 0x0a /* Public */,
+       3,    0,  105,    2, 0x0a /* Public */,
+       4,    0,  106,    2, 0x0a /* Public */,
+       5,    0,  107,    2, 0x0a /* Public */,
+       6,    0,  108,    2, 0x0a /* Public */,
+       7,    1,  109,    2, 0x0a /* Public */,
+       9,    0,  112,    2, 0x0a /* Public */,
+      10,    0,  113,    2, 0x0a /* Public */,
+      11,    0,  114,    2, 0x0a /* Public */,
+      12,    0,  115,    2, 0x0a /* Public */,
+      13,    1,  116,    2, 0x0a /* Public */,
+      13,    0,  119,    2, 0x2a /* Public | MethodCloned */,
+      15,    1,  120,    2, 0x0a /* Public */,
+      15,    0,  123,    2, 0x2a /* Public | MethodCloned */,
+      12,    1,  124,    2, 0x0a /* Public */,
+      18,    0,  127,    2, 0x0a /* Public */,
+      19,    1,  128,    2, 0x0a /* Public */,
+      21,    1,  131,    2, 0x0a /* Public */,
 
  // slots: parameters
     QMetaType::Void,
@@ -109,9 +110,10 @@ static const uint qt_meta_data_MainWindow[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,   13,
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int,   15,
+    QMetaType::Void, QMetaType::Int,   14,
+    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,   16,
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,   17,
     QMetaType::Void,
@@ -136,14 +138,15 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 6: _t->rotateImageP90(); break;
         case 7: _t->rotateImageM90(); break;
         case 8: _t->customRotate(); break;
-        case 9: _t->contrastImage((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 10: _t->contrastImage(); break;
-        case 11: _t->brightenImage((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 12: _t->brightenImage(); break;
-        case 13: _t->resizeImage((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 14: _t->cropImage(); break;
-        case 15: _t->dilateImage((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 16: _t->erodeImage((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 9: _t->resizeImage(); break;
+        case 10: _t->contrastImage((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 11: _t->contrastImage(); break;
+        case 12: _t->brightenImage((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 13: _t->brightenImage(); break;
+        case 14: _t->resizeImage((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 15: _t->cropImage(); break;
+        case 16: _t->dilateImage((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 17: _t->erodeImage((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -178,13 +181,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 17)
+        if (_id < 18)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 17;
+        _id -= 18;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 17)
+        if (_id < 18)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 17;
+        _id -= 18;
     }
     return _id;
 }
