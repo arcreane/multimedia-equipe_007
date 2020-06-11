@@ -8,14 +8,12 @@
 /* Constructors */
 ImageManipulator::ImageManipulator()
 {
-    this->currentChangesIndex = 0;
     this->slider = 5;
 }
 
 ImageManipulator::ImageManipulator(char *imageName)
 {
     this->setOriginalImage(imageName);
-    this->currentChangesIndex = 0;
     this->slider = 5;
 }
 
@@ -39,11 +37,6 @@ ImageColorType ImageManipulator::getColorType()
 int ImageManipulator::setImage(Mat newImage)
 {
     currentImageState.image = newImage;
-    lastChanges.insert(lastChanges.begin() + currentChangesIndex, currentImageState);
-    currentChangesIndex++;
-    if (lastChanges.size() > MAX_REMEMBERED_CHANGES){
-        lastChanges.erase(lastChanges.begin());
-    }
     return 0;
 }
 
@@ -65,26 +58,6 @@ int ImageManipulator::reset()
 {
     setImage(originalImage);
     currentImageState.colorType = BGR_IMAGE;
-    return 0;
-}
-
-/* Undo function */
-int ImageManipulator::undo()
-{
-    if(currentChangesIndex < 0){
-        currentChangesIndex--;
-        currentImageState = lastChanges.at(currentChangesIndex);
-    }
-    return 0;
-}
-
-/* Redo function */
-int ImageManipulator::redo()
-{
-    if(currentChangesIndex > MAX_REMEMBERED_CHANGES - 1){
-        currentChangesIndex++;
-        currentImageState = lastChanges.at(currentChangesIndex);
-    }
     return 0;
 }
 

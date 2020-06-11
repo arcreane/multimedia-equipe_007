@@ -73,24 +73,6 @@ void MainWindow::reset()
     }
 }
 
-/* Undo function */
-void MainWindow::undo()
-{
-    if (imageIsLoaded) {
-        imageManipulator->undo();
-        refreshImage();
-    }
-}
-
-/* Redo function */
-void MainWindow::redo()
-{
-    if (imageIsLoaded) {
-        imageManipulator->redo();
-        refreshImage();
-    }
-}
-
 /* Set image to its grey version */
 void MainWindow::imageToGrey()
 {

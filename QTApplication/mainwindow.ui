@@ -486,8 +486,6 @@
      <string>Images</string>
     </property>
     <addaction name="actionReset"/>
-    <addaction name="actionUndo"/>
-    <addaction name="actionRedo"/>
     <addaction name="separator"/>
     <addaction name="actionToGrey"/>
     <addaction name="actionDetectEdges"/>
@@ -513,8 +511,6 @@
    <addaction name="actionSave"/>
    <addaction name="separator"/>
    <addaction name="actionReset"/>
-   <addaction name="actionUndo"/>
-   <addaction name="actionRedo"/>
    <addaction name="separator"/>
    <addaction name="actionToGrey"/>
    <addaction name="actionDetectEdges"/>
@@ -550,16 +546,6 @@
   <action name="actionReset">
    <property name="text">
     <string>Reset</string>
-   </property>
-  </action>
-  <action name="actionUndo">
-   <property name="text">
-    <string>Undo</string>
-   </property>
-  </action>
-  <action name="actionRedo">
-   <property name="text">
-    <string>Redo</string>
    </property>
   </action>
   <action name="actionDetectEdges">
@@ -620,38 +606,6 @@
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>reset()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>401</x>
-     <y>298</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionUndo</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>undo()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>401</x>
-     <y>298</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionRedo</sender>
-   <signal>triggered()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>redo()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>

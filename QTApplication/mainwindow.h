@@ -26,8 +26,6 @@ public:
 public slots:
     void open();
     void reset();
-    void undo();
-    void redo();
     void imageToGrey();
     void detectEdges();
     void createPanorama();

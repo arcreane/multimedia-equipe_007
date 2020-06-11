@@ -51,8 +51,6 @@ private:
     int slider;
     ImageState currentImageState;
     Mat originalImage;
-    int currentChangesIndex;
-    vector<ImageState> lastChanges;
 
 public:
     // Constructors
@@ -67,8 +65,6 @@ public:
     int setOriginalImage(char *imageName);
     // Methods
     int reset();
-    int undo();
-    int redo();
     int imageToGrey();
     Mat blurImage(int kernelX, int kernelY, Point anchor = Point(-1, -1), int borderType = 4);
     Mat blurImage(int kernelXY, Point anchor = Point(-1, -1), int borderType = 4);

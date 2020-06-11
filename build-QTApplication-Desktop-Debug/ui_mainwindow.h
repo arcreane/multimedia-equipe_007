@@ -36,8 +36,6 @@ public:
     QAction *actionAbout;
     QAction *actionToGrey;
     QAction *actionReset;
-    QAction *actionUndo;
-    QAction *actionRedo;
     QAction *actionDetectEdges;
     QAction *actionPanorama;
     QAction *actionBlur;
@@ -103,10 +101,6 @@ public:
         actionToGrey->setObjectName(QString::fromUtf8("actionToGrey"));
         actionReset = new QAction(MainWindow);
         actionReset->setObjectName(QString::fromUtf8("actionReset"));
-        actionUndo = new QAction(MainWindow);
-        actionUndo->setObjectName(QString::fromUtf8("actionUndo"));
-        actionRedo = new QAction(MainWindow);
-        actionRedo->setObjectName(QString::fromUtf8("actionRedo"));
         actionDetectEdges = new QAction(MainWindow);
         actionDetectEdges->setObjectName(QString::fromUtf8("actionDetectEdges"));
         actionPanorama = new QAction(MainWindow);
@@ -259,8 +253,6 @@ public:
         menuSettings->addAction(actionLanguage);
         menuAbout->addAction(actionAbout);
         menuImages->addAction(actionReset);
-        menuImages->addAction(actionUndo);
-        menuImages->addAction(actionRedo);
         menuImages->addSeparator();
         menuImages->addAction(actionToGrey);
         menuImages->addAction(actionDetectEdges);
@@ -270,8 +262,6 @@ public:
         toolBar->addAction(actionSave);
         toolBar->addSeparator();
         toolBar->addAction(actionReset);
-        toolBar->addAction(actionUndo);
-        toolBar->addAction(actionRedo);
         toolBar->addSeparator();
         toolBar->addAction(actionToGrey);
         toolBar->addAction(actionDetectEdges);
@@ -282,8 +272,6 @@ public:
         QObject::connect(actionOpen, SIGNAL(triggered()), MainWindow, SLOT(open()));
         QObject::connect(actionToGrey, SIGNAL(triggered()), MainWindow, SLOT(imageToGrey()));
         QObject::connect(actionReset, SIGNAL(triggered()), MainWindow, SLOT(reset()));
-        QObject::connect(actionUndo, SIGNAL(triggered()), MainWindow, SLOT(undo()));
-        QObject::connect(actionRedo, SIGNAL(triggered()), MainWindow, SLOT(redo()));
         QObject::connect(actionDetectEdges, SIGNAL(triggered()), MainWindow, SLOT(detectEdges()));
         QObject::connect(actionPanorama, SIGNAL(triggered()), MainWindow, SLOT(createPanorama()));
 
@@ -299,8 +287,6 @@ public:
         actionAbout->setText(QCoreApplication::translate("MainWindow", "About", nullptr));
         actionToGrey->setText(QCoreApplication::translate("MainWindow", "To grey", nullptr));
         actionReset->setText(QCoreApplication::translate("MainWindow", "Reset", nullptr));
-        actionUndo->setText(QCoreApplication::translate("MainWindow", "Undo", nullptr));
-        actionRedo->setText(QCoreApplication::translate("MainWindow", "Redo", nullptr));
         actionDetectEdges->setText(QCoreApplication::translate("MainWindow", "Edge Detection", nullptr));
         actionPanorama->setText(QCoreApplication::translate("MainWindow", "Panorama", nullptr));
 #if QT_CONFIG(tooltip)
