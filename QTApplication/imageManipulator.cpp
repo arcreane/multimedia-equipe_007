@@ -8,14 +8,12 @@
 /* Constructors */
 ImageManipulator::ImageManipulator()
 {
-    this->currentChangesIndex = 0;
     this->slider = 5;
 }
 
 ImageManipulator::ImageManipulator(char *imageName)
 {
     this->setOriginalImage(imageName);
-    this->currentChangesIndex = 0;
     this->slider = 5;
 }
 
@@ -39,11 +37,6 @@ ImageColorType ImageManipulator::getColorType()
 int ImageManipulator::setImage(Mat newImage)
 {
     currentImageState.image = newImage;
-    lastChanges.insert(lastChanges.begin() + currentChangesIndex, currentImageState);
-    currentChangesIndex++;
-    if (lastChanges.size() > MAX_REMEMBERED_CHANGES){
-        lastChanges.erase(lastChanges.begin());
-    }
     return 0;
 }
 
@@ -65,26 +58,6 @@ int ImageManipulator::reset()
 {
     setImage(originalImage);
     currentImageState.colorType = BGR_IMAGE;
-    return 0;
-}
-
-/* Undo function */
-int ImageManipulator::undo()
-{
-    if(currentChangesIndex < 0){
-        currentChangesIndex--;
-        currentImageState = lastChanges.at(currentChangesIndex);
-    }
-    return 0;
-}
-
-/* Redo function */
-int ImageManipulator::redo()
-{
-    if(currentChangesIndex > MAX_REMEMBERED_CHANGES - 1){
-        currentChangesIndex++;
-        currentImageState = lastChanges.at(currentChangesIndex);
-    }
     return 0;
 }
 
@@ -190,7 +163,7 @@ int ImageManipulator::cropImage(int height, int width)
 }
 
 /* Dilate an Image */
-int ImageManipulator::dilateImage(int dilation_elem, int dilation_size)
+Mat ImageManipulator::dilateImage(int dilation_elem, int dilation_size)
 {
     int dilation_type;
     switch(dilation_elem){
@@ -213,12 +186,11 @@ int ImageManipulator::dilateImage(int dilation_elem, int dilation_size)
     // create dilatated image and apply the dilation operation
     Mat dilatedImage;
     dilate(currentImageState.image, dilatedImage, element);
-    setImage(dilatedImage);
-    return 0;
+    return dilatedImage;
 }
 
 /* Erode an Image */
-int ImageManipulator::erodeImage(int erosion_elem, int erosion_size)
+Mat ImageManipulator::erodeImage(int erosion_elem, int erosion_size)
 {
     int erosion_type;
     if (erosion_elem == 0)
@@ -239,8 +211,7 @@ int ImageManipulator::erodeImage(int erosion_elem, int erosion_size)
     Mat erodedImage;
     // Apply the erosions operation
     erode(currentImageState.image, erodedImage, element);
-    setImage(erodedImage);
-    return 0;
+    return erodedImage;
 }
 
 /* Panorama */
