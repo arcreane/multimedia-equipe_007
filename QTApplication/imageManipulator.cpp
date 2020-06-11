@@ -301,7 +301,12 @@ CannyBody ImageManipulator::generateCannyProperties() {
     }
 
     cannyBody.dest.create( cannyBody.src.size(), cannyBody.src.type() );
-    cvtColor( cannyBody.src, cannyBody.src_gray, COLOR_BGR2GRAY );
+    if (currentImageState.colorType == GRAY_IMAGE){
+    // cvtColor( cannyBody.src, cannyBody.src_gray, COLOR_BGR2GRAY );
+
+    } else {
+         cvtColor( cannyBody.src, cannyBody.src_gray, COLOR_BGR2GRAY );
+    }
     namedWindow( cannyBody.window_name, WINDOW_AUTOSIZE );
 
     createTrackbar( "Min Threshold:", cannyBody.window_name, &cannyBody.lowThreshold, cannyBody.max_lowThreshold, startCannyDetection);
