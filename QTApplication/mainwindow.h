@@ -33,6 +33,7 @@ public slots:
     void rotateImageP90();
     void rotateImageM90();
     void customRotate();
+    void resizeImage();
     void contrastImage(int beta = 0);
     void brightenImage(int alpha = 1);
     void resizeImage(int scale);
@@ -47,6 +48,8 @@ private:
     ImageManipulator *imageManipulator;
     bool imageIsLoaded;
     Mat imageToModify;
+    int width;
+    int height;
     // private functions
     void showImage(Mat mat);
     void refreshImage();

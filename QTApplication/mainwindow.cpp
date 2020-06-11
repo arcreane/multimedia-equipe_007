@@ -6,6 +6,7 @@
 #include "qpushbutton.h"
 #include "qslider.h"
 #include "qlineedit.h"
+#include "qmessagebox.h"
 
 /* CONSTRUCTOR */
 MainWindow::MainWindow(QWidget *parent)
@@ -39,11 +40,15 @@ void MainWindow::showImage(Mat mat)
         QImage image= QImage((uchar*) mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888).rgbSwapped();
         //set label pixmap with qimage
         QPixmap pixmap = QPixmap::fromImage(image);
+
+        //imageLabel->resize(mat.size().width,mat.size().height);
+
         imageLabel->setPixmap(pixmap.scaled(imageLabel->size(), Qt::KeepAspectRatio));
         imageLabel->show();
         ui->containerWidget->setVisible(true);
    }
 }
+
 
 void MainWindow::refreshImage()
 {
@@ -60,6 +65,12 @@ void MainWindow::open()
     // read image and show in gui
     imageManipulator->setOriginalImage(c_fileName);
     imageIsLoaded = true;
+    int w = imageManipulator->getImage().size().width;
+    int h = imageManipulator->getImage().size().height;
+    width=w;
+    height=h;
+    ui->resizeW->setPlaceholderText(QString::number(w));
+    ui->resizeH->setPlaceholderText(QString::number(h));
     refreshImage();
 }
 
@@ -87,7 +98,6 @@ void MainWindow::initializeAll()
     ui->slider_blur->setRange(1, 41);
     ui->slider_contrast->setRange(-100, 100);
     ui->slider_brightness->setRange(100, 1000);
-    ui->resizeBar->setRange(50, 150);
     ui->erosionBar->setRange(0, 10);
     ui->dilationBar->setRange(0, 10);
     resetAll();
@@ -109,9 +119,11 @@ void MainWindow::resetAll()
     ui->slider_blur->setValue(1);
     ui->slider_contrast->setValue(0);
     ui->slider_brightness->setValue(100);
-    ui->resizeBar->setValue(100);
     ui->erosionBar->setValue(0);
     ui->dilationBar->setValue(0);
+    // crop inputs
+    ui->cropInputX->clear();
+    ui->cropInputY->clear();
 }
 
 void MainWindow::connectAll()
@@ -122,10 +134,54 @@ void MainWindow::connectAll()
     connect(ui->buttonRotateP90, SIGNAL(clicked()), this, SLOT(rotateImageP90()));
     connect(ui->buttonRotateM90, SIGNAL(clicked()), this, SLOT(rotateImageM90()));
     connect(ui->customRotate, SIGNAL(clicked()), this, SLOT(customRotate()));
-    connect(ui->resizeBar, SIGNAL(valueChanged(int)), this, SLOT(resizeImage(int)));
     connect(ui->erosionBar, SIGNAL(valueChanged(int)), this, SLOT(erodeImage(int)));
     connect(ui->dilationBar, SIGNAL(valueChanged(int)), this, SLOT(dilateImage(int)));
     connect(ui->cropButton, SIGNAL(clicked()), this, SLOT(cropImage()));
+}
+
+/* resize image slot */
+void MainWindow::resizeImage(){
+    if(imageIsLoaded){
+        QString w = ui->resizeW->text();
+        QString h = ui->resizeH->text();
+
+        Mat mat = imageManipulator->getImage();
+
+        if ((w.toInt()>=width)|| (h.toInt()>=height)){
+            QMessageBox::information(
+                this,
+                tr("Invalid data"),
+                tr("Please choose values under the original size") );
+        }
+
+        else if ((w.isEmpty())|| (h.isEmpty())){
+            QMessageBox::information(
+                this,
+                tr("Invalid data"),
+                tr("Please choose for both values") );
+        }
+
+        else {
+
+        ui->resizeW->setPlaceholderText(w);
+        ui->resizeH->setPlaceholderText(h);
+
+        //imageManipulator->resizeImage(w.toInt()/width, h.toInt()/height);
+
+        imageManipulator->resizeImage(w.toInt()/width, h.toInt()/height);
+
+        //transform matrice into a qimage
+        QImage image= QImage((uchar*) mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888).rgbSwapped();
+        //set label pixmap with qimage
+        QPixmap pixmap = QPixmap::fromImage(image);
+        imageLabel->setPixmap(pixmap);
+        imageLabel->show();
+        //imageManipulator->resizeImage(0,scaleW);
+        ui->resizeW->clear();
+        ui->resizeH->clear();
+        // refreshImage();
+        }
+    }
 }
 
 /* Blur image slot */
@@ -195,11 +251,14 @@ void MainWindow::brightenImage(int alpha /*= 0*/)
     }
 }
 
+
+
 /* Resize an Image */
 void MainWindow::resizeImage(int scale)
 {
     double fxfy = scale / 100;
-    showImage(imageManipulator->resizeImage(fxfy, 1));
+    double height = int(imageManipulator->getImage().size().height * scale / 100);
+    showImage(imageManipulator->resizeImage(height, 1));
 }
 
 /* Crop an Image */
@@ -211,6 +270,8 @@ void MainWindow::cropImage()
     if((newWidth <= currentImg.size().width) && (newHeight <= currentImg.size().height)){
         imageManipulator->cropImage(newHeight, newWidth);
         refreshImage();
+        ui->cropInputX->clear();
+        ui->cropInputY->clear();
     }
 }
 

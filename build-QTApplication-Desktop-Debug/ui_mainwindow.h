@@ -63,7 +63,9 @@ public:
     QPushButton *cropButton;
     QLineEdit *cropInputX;
     QLineEdit *cropInputY;
-    QSlider *resizeBar;
+    QLineEdit *resizeW;
+    QPushButton *resizeButton;
+    QLineEdit *resizeH;
     QWidget *contrastWidget_2;
     QLabel *erosionLabel;
     QSlider *erosionBar;
@@ -182,10 +184,15 @@ public:
         cropInputY = new QLineEdit(widget);
         cropInputY->setObjectName(QString::fromUtf8("cropInputY"));
         cropInputY->setGeometry(QRect(70, 70, 51, 25));
-        resizeBar = new QSlider(widget);
-        resizeBar->setObjectName(QString::fromUtf8("resizeBar"));
-        resizeBar->setGeometry(QRect(10, 20, 171, 21));
-        resizeBar->setOrientation(Qt::Horizontal);
+        resizeW = new QLineEdit(widget);
+        resizeW->setObjectName(QString::fromUtf8("resizeW"));
+        resizeW->setGeometry(QRect(10, 20, 51, 25));
+        resizeButton = new QPushButton(widget);
+        resizeButton->setObjectName(QString::fromUtf8("resizeButton"));
+        resizeButton->setGeometry(QRect(130, 20, 61, 25));
+        resizeH = new QLineEdit(widget);
+        resizeH->setObjectName(QString::fromUtf8("resizeH"));
+        resizeH->setGeometry(QRect(70, 20, 51, 25));
         contrastWidget_2 = new QWidget(containerWidget);
         contrastWidget_2->setObjectName(QString::fromUtf8("contrastWidget_2"));
         contrastWidget_2->setGeometry(QRect(0, 190, 201, 71));
@@ -304,6 +311,7 @@ public:
         labelResize->setText(QCoreApplication::translate("MainWindow", "Resize", nullptr));
         labelCrop->setText(QCoreApplication::translate("MainWindow", "Crop inputs", nullptr));
         cropButton->setText(QCoreApplication::translate("MainWindow", "Crop", nullptr));
+        resizeButton->setText(QCoreApplication::translate("MainWindow", "Resize", nullptr));
         erosionLabel->setText(QCoreApplication::translate("MainWindow", "Erosion", nullptr));
         erosionRadio1->setText(QCoreApplication::translate("MainWindow", "Cross", nullptr));
         erosionRadio0->setText(QCoreApplication::translate("MainWindow", "Rect", nullptr));
