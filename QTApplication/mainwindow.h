@@ -50,6 +50,8 @@ private:
     ImageManipulator *imageManipulator;
     bool imageIsLoaded;
     Mat imageToModify;
+    int width;
+    int height;
     // private functions
     void showImage(Mat mat);
     void refreshImage();

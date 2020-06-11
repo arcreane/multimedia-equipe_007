@@ -6,6 +6,7 @@
 #include "qpushbutton.h"
 #include "qslider.h"
 #include "qlineedit.h"
+#include "qmessagebox.h"
 
 /* CONSTRUCTOR */
 MainWindow::MainWindow(QWidget *parent)
@@ -66,6 +67,8 @@ void MainWindow::open()
     imageIsLoaded = true;
     int w = imageManipulator->getImage().size().width;
     int h = imageManipulator->getImage().size().height;
+    width=w;
+    height=h;
     ui->resizeW->setPlaceholderText(QString::number(w));
     ui->resizeH->setPlaceholderText(QString::number(h));
     refreshImage();
@@ -140,28 +143,45 @@ void MainWindow::connectAll()
 /* resize image slot */
 void MainWindow::resizeImage(){
     if(imageIsLoaded){
-        QString width = ui->resizeW->text();
-        QString height = ui->resizeH->text();
+        QString w = ui->resizeW->text();
+        QString h = ui->resizeH->text();
+
         Mat mat = imageManipulator->getImage();
-        int w = mat.size().width;
-        int h = mat.size().height;
 
-        ui->resizeW->setPlaceholderText(width);
-        ui->resizeH->setPlaceholderText(height);
+        if ((w.toInt()>=width)|| (h.toInt()>=height)){
+            QMessageBox::information(
+                this,
+                tr("Invalid data"),
+                tr("Please choose values under the original size") );
+        }
 
-        //imageManipulator->resizeImage(w/width.toInt(),h/height.toInt(),1);
+        else if ((w.isEmpty())|| (h.isEmpty())){
+            QMessageBox::information(
+                this,
+                tr("Invalid data"),
+                tr("Please choose for both values") );
+        }
+
+        else {
+
+        ui->resizeW->setPlaceholderText(w);
+        ui->resizeH->setPlaceholderText(h);
+
+        //imageManipulator->resizeImage(w.toInt()/width, h.toInt()/height);
+
+        imageManipulator->resizeImage(w.toInt()/width, h.toInt()/height);
 
         //transform matrice into a qimage
         QImage image= QImage((uchar*) mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888).rgbSwapped();
         //set label pixmap with qimage
         QPixmap pixmap = QPixmap::fromImage(image);
-        imageLabel->resize(imageManipulator->getImage().size().width,imageManipulator->getImage().size().height);
-        imageLabel->setPixmap(pixmap.scaled(imageLabel->size()));
+        imageLabel->setPixmap(pixmap);
         imageLabel->show();
         //imageManipulator->resizeImage(0,scaleW);
         ui->resizeW->clear();
         ui->resizeH->clear();
         // refreshImage();
+        }
     }
 }
 
