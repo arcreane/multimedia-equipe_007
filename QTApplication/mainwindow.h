@@ -50,7 +50,10 @@ private:
     Mat imageToModify;
     int width;
     int height;
+    double angle;
     // private functions
+    void setAngle(double angle);
+    double getAngle();
     void showImage(Mat mat);
     void refreshImage();
     void initializeAll();

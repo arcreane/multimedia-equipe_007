@@ -7,6 +7,8 @@
 #include "qslider.h"
 #include "qlineedit.h"
 #include "qmessagebox.h"
+#include "qgraphicsscene.h"
+#include "qgraphicsview.h"
 
 /* CONSTRUCTOR */
 MainWindow::MainWindow(QWidget *parent)
@@ -46,6 +48,7 @@ void MainWindow::showImage(Mat mat)
         imageLabel->setPixmap(pixmap.scaled(imageLabel->size(), Qt::KeepAspectRatio));
         imageLabel->show();
         ui->containerWidget->setVisible(true);
+        angle=0.0;
    }
 }
 
@@ -54,6 +57,13 @@ void MainWindow::refreshImage()
 {
     showImage(imageManipulator->getImage());
 }
+
+void MainWindow::setAngle(double angle2){
+    angle = angle2;
+};
+double MainWindow::getAngle(){
+     return angle;
+};
 
 void MainWindow::open()
 {
@@ -113,12 +123,12 @@ void MainWindow::resetAll()
     ui->gaussianBox->setChecked(true);
     // erosion radio buttons
     ui->erosionRadio0->setChecked(true);
-    ui->erosionRadio0->setChecked(false);
-    ui->erosionRadio0->setChecked(false);
+    ui->erosionRadio1->setChecked(false);
+    ui->erosionRadio2->setChecked(false);
     // dilation radio buttons
     ui->dilationRadio0->setChecked(true);
-    ui->dilationRadio0->setChecked(false);
-    ui->dilationRadio0->setChecked(false);
+    ui->dilationRadio1->setChecked(false);
+    ui->dilationRadio2->setChecked(false);
     // sliders
     ui->slider_blur->setValue(1);
     ui->slider_contrast->setValue(0);
@@ -227,26 +237,74 @@ void MainWindow::gaussianBlurImage(int kernelXY, double sigmaX /*= (0.0)*/, doub
 void MainWindow::rotateImageP90()
 {
     if(imageIsLoaded){
-        imageManipulator->rotateImage(90);
-        refreshImage();
+
+        Mat mat = imageManipulator->getImage();
+        if (imageManipulator->getColorType() == GRAY_IMAGE){
+            cvtColor(mat, mat, CV_GRAY2RGB);
+        }
+        //transform matrice into a qimage
+        QImage image= QImage((uchar*) mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888).rgbSwapped();
+        //set label pixmap with qimage
+        QPixmap pixmap = QPixmap::fromImage(image);
+
+        QPoint center = image.rect().center();
+        QMatrix matrix;
+        setAngle(angle + 90);
+        matrix.translate(center.x(), center.y());
+        matrix.rotate(getAngle());
+
+        imageLabel->setPixmap(pixmap.transformed(matrix).scaled(width,height,Qt::KeepAspectRatio));
+
     }
 }
 
 void MainWindow::rotateImageM90()
 {
     if(imageIsLoaded){
-        imageManipulator->rotateImage(-90);
-        refreshImage();
+
+        Mat mat = imageManipulator->getImage();
+        if (imageManipulator->getColorType() == GRAY_IMAGE){
+            cvtColor(mat, mat, CV_GRAY2RGB);
+        }
+        //transform matrice into a qimage
+        QImage image= QImage((uchar*) mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888).rgbSwapped();
+        //set label pixmap with qimage
+        QPixmap pixmap = QPixmap::fromImage(image);
+
+        QPoint center = image.rect().center();
+        QMatrix matrix;
+        matrix.translate(center.x(), center.y());
+        setAngle(angle - 90);
+        matrix.rotate(getAngle());
+
+        imageLabel->setPixmap(pixmap.transformed(matrix).scaled(width,height,Qt::KeepAspectRatio));
     }
 }
+
+
 
 void MainWindow::customRotate()
 {
     if(imageIsLoaded){
         QString radiusStr = ui->customRotateInput->text();
-        imageManipulator->rotateImage(radiusStr.toInt());
+
         ui->customRotateInput->clear();
-        refreshImage();
+        Mat mat = imageManipulator->getImage();
+        if (imageManipulator->getColorType() == GRAY_IMAGE){
+            cvtColor(mat, mat, CV_GRAY2RGB);
+        }
+        //transform matrice into a qimage
+        QImage image= QImage((uchar*) mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888).rgbSwapped();
+        //set label pixmap with qimage
+        QPixmap pixmap = QPixmap::fromImage(image);
+
+        QPoint center = image.rect().center();
+        QMatrix matrix;
+        matrix.translate(center.x(), center.y());
+        setAngle(angle + radiusStr.toInt());
+        matrix.rotate(getAngle());
+
+        imageLabel->setPixmap(pixmap.transformed(matrix).scaled(width,height,Qt::KeepAspectRatio));
     }
 }
 
