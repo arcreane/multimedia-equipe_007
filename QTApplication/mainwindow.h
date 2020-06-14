@@ -53,6 +53,7 @@ private:
     double angle;
     // private functions
     void setAngle(double angle);
+    bool isColored;
     double getAngle();
     void showImage(Mat mat);
     void refreshImage();

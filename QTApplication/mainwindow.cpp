@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "qscreen.h"
 #include "qfiledialog.h"
@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->containerWidget->setVisible(false);
     initializeAll();
     connectAll();
+    isColored = true;
 }
 
 /* DESTRUCTOR */
@@ -91,6 +92,7 @@ void MainWindow::reset()
 {
     if (imageIsLoaded) {
         imageManipulator->reset();
+        isColored=true;
         ui->resizeW->setPlaceholderText(QString::number(width));
         ui->resizeH->setPlaceholderText(QString::number(height));
         refreshImage();
@@ -101,8 +103,9 @@ void MainWindow::reset()
 /* Set image to its grey version */
 void MainWindow::imageToGrey()
 {
-    if (imageIsLoaded && (imageManipulator->getColorType() != GRAY_IMAGE)) {
+    if (imageIsLoaded && isColored) {
         imageManipulator->imageToGrey();
+        isColored=false;
         refreshImage();
     }
 }

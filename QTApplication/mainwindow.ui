@@ -533,6 +533,7 @@
    <addaction name="actionReset"/>
    <addaction name="separator"/>
    <addaction name="actionToGrey"/>
+   <addaction name="actionToColor"/>
    <addaction name="actionDetectEdges"/>
    <addaction name="separator"/>
    <addaction name="actionPanorama"/>
@@ -584,6 +585,21 @@
   <action name="actionBlur">
    <property name="text">
     <string>Blur</string>
+   </property>
+  </action>
+  <action name="actionTocolor">
+   <property name="text">
+    <string>To color</string>
+   </property>
+  </action>
+  <action name="actionTo_color">
+   <property name="text">
+    <string>To color</string>
+   </property>
+  </action>
+  <action name="actionToColor">
+   <property name="text">
+    <string>To color</string>
    </property>
   </action>
  </widget>
@@ -669,6 +685,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionToColor</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>reset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>202</x>
+     <y>14</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>467</x>
+     <y>120</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>open()</slot>
@@ -679,5 +711,6 @@
   <slot>detectEdges()</slot>
   <slot>createPanorama()</slot>
   <slot>createBlurImage()</slot>
+  <slot>imageToColor()</slot>
  </slots>
 </ui>
