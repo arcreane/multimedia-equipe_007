@@ -39,6 +39,9 @@ public:
     QAction *actionDetectEdges;
     QAction *actionPanorama;
     QAction *actionBlur;
+    QAction *actionTocolor;
+    QAction *actionTo_color;
+    QAction *actionToColor;
     QWidget *centralwidget;
     QWidget *imageWidget;
     QWidget *containerWidget;
@@ -109,6 +112,12 @@ public:
         actionPanorama->setObjectName(QString::fromUtf8("actionPanorama"));
         actionBlur = new QAction(MainWindow);
         actionBlur->setObjectName(QString::fromUtf8("actionBlur"));
+        actionTocolor = new QAction(MainWindow);
+        actionTocolor->setObjectName(QString::fromUtf8("actionTocolor"));
+        actionTo_color = new QAction(MainWindow);
+        actionTo_color->setObjectName(QString::fromUtf8("actionTo_color"));
+        actionToColor = new QAction(MainWindow);
+        actionToColor->setObjectName(QString::fromUtf8("actionToColor"));
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         centralwidget->setEnabled(true);
@@ -271,6 +280,7 @@ public:
         toolBar->addAction(actionReset);
         toolBar->addSeparator();
         toolBar->addAction(actionToGrey);
+        toolBar->addAction(actionToColor);
         toolBar->addAction(actionDetectEdges);
         toolBar->addSeparator();
         toolBar->addAction(actionPanorama);
@@ -281,6 +291,7 @@ public:
         QObject::connect(actionReset, SIGNAL(triggered()), MainWindow, SLOT(reset()));
         QObject::connect(actionDetectEdges, SIGNAL(triggered()), MainWindow, SLOT(detectEdges()));
         QObject::connect(actionPanorama, SIGNAL(triggered()), MainWindow, SLOT(createPanorama()));
+        QObject::connect(actionToColor, SIGNAL(triggered()), MainWindow, SLOT(reset()));
 
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
@@ -300,6 +311,9 @@ public:
         actionPanorama->setToolTip(QCoreApplication::translate("MainWindow", "Open the assets folder", nullptr));
 #endif // QT_CONFIG(tooltip)
         actionBlur->setText(QCoreApplication::translate("MainWindow", "Blur", nullptr));
+        actionTocolor->setText(QCoreApplication::translate("MainWindow", "To color", nullptr));
+        actionTo_color->setText(QCoreApplication::translate("MainWindow", "To color", nullptr));
+        actionToColor->setText(QCoreApplication::translate("MainWindow", "To color", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "Contrast", nullptr));
         label_4->setText(QCoreApplication::translate("MainWindow", "Brightness", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "Kernel size for blurring", nullptr));

@@ -264,11 +264,12 @@ void ImageManipulator::createOwnPanorama(vector<Mat> images, Stitcher::Mode mode
        Else, we open a new window containing the result because we don't want to replace current content due to the fact that panorama
        is not an editing functionality.
     */
-    if(getImage().empty()) {
-        setImage(pano);
-    } else {
-        imshow("Panorama result", pano);
-    }
+    imshow("Panorama result", pano);
+//    if(getImage().empty()) {
+//        setImage(pano);
+//    } else {
+//        imshow("Panorama result", pano);
+//    }
 
     if( dir = opendir(panorama_output_path.c_str()) ) {
         imwrite(panorama_output_path + panorama_name, pano);
